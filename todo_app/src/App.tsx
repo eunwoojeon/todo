@@ -1,10 +1,13 @@
 import './App.css';
 import 'normalize.css';
+import { ToDo, NavigatorBar } from './components';
 
 const App: React.FC = () => {
+
   return (
     <div className="App">
-      typescript 마이그레이션 완료
+      <NavigatorBar />
+      <ToDo />
     </div>
   );
 }
