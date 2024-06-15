@@ -1,6 +1,6 @@
-import ToDo from './ToDo';
+import TodoApp from './TodoApp';
 import NavigatorBar from './NavigatorBar';
-import InputBox from './InputBox';
-import ToDoList from './ToDoList';
+import TodoInputSection from './TodoInputSection';
+import TodoListSection from './TodoListSection';
 
-export {ToDo, NavigatorBar, InputBox, ToDoList};
+export {TodoApp, NavigatorBar, TodoInputSection, TodoListSection};
