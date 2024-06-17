@@ -1,11 +1,15 @@
 @import url('https://fonts.googleapis.com/css2?family=Oleo+Script:wght@400;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap');
 
-.App {
+#root {
   width: 100vw;
   height: 100vh;
 }
 
 * {
   font-family: "Oleo Script", "Noto Sans KR";
+}
+
+.input-font {
+  font-family: "Noto Sans KR";
 }
