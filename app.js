@@ -1,3 +1,4 @@
+// --- SERVER ---
 // node.js 함수로 외부 모듈 import
 const express = require("express");
 const path = require("path");
@@ -22,18 +23,61 @@ app.listen(app.get("port"), () => {
   console.log(app.get("port"), "번 포트에서 대기중.."); // callback
 });
 
+process.once('SIGINT', async () => {
+  console.log('mongoDB disconnecting');
+  await disconn();
+  process.exit(0);
+});
+
+
+
+// --- DB ---
 const mongoose = require('mongoose');
-const uri = "mongodb+srv://ewjeon:doiAwDjOHuSfDf4p@cluster0.vnq3j1u.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
-const clientOptions = { serverApi: { version: '1', strict: true, deprecationErrors: true } };
-async function run() {
+// protocol:// + username:password@cluster-url/database?retryWrites=true&w=majority
+const uri = "mongodb+srv://ewjeon:doiAwDjOHuSfDf4p@cluster0.vnq3j1u.mongodb.net/todo?retryWrites=true&w=majority&appName=Cluster0";
+const clientOptions = { 
+  serverApi: { 
+    version: '1',
+    strict: true,
+    deprecationErrors: true 
+  } 
+};
+
+async function conn() {
   try {
-    // Create a Mongoose client with a MongoClientOptions object to set the Stable API version
-    await mongoose.connect(uri, clientOptions);
+    (await mongoose.connect(uri, clientOptions));
     await mongoose.connection.db.admin().command({ ping: 1 });
-    console.log("Pinged your deployment. You successfully connected to MongoDB!");
-  } finally {
-    // Ensures that the client will close when you finish/error
+  } catch (error) {
+    console.log(error);
     await mongoose.disconnect();
   }
 }
-run().catch(console.dir);
+
+async function disconn() {
+  await mongoose.disconnect();
+}
+
+mongoose.connection.on('connected', () => console.log('connected'));
+mongoose.connection.on('open', () => console.log('open'));
+mongoose.connection.on('disconnected', () => console.log('disconnected'));
+mongoose.connection.on('reconnected', () => console.log('reconnected'));
+mongoose.connection.on('disconnecting', () => console.log('disconnecting'));
+mongoose.connection.on('close', () => console.log('close'));
+
+conn()
+  .catch(console.dir);
+
+const User = require('./schemas/user');
+async function insertTest () {
+  const user = new User({
+    google_id: 'wjs***',
+    email: 'wjs***@***',
+    name: 'ew***'
+  });
+  console.log(user);
+  await user.save();
+  const Users = await User.find();
+  console.log(Users);
+};
+
+insertTest();
