@@ -1,7 +1,7 @@
 // --- SERVER ---
 // node.js 함수로 외부 모듈 import
-const express = require("express");
-const path = require("path");
+import express, {Request, Response} from "express";
+import path from "path";
 
 const app = express();
 const port = 4000;
@@ -12,11 +12,6 @@ app.set("port", port); // express에 port=4000 setting
 // - 현재 폴더의 절대경로(__dirname)
 // - ex) http://localhost:4000/ === __dirname/todo_app/build/
 app.use(express.static(path.join(__dirname, "todo_app/build")));
-
-// get("/") 요청에 대한 응답
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "/todo_app/build/index.html"));
-});
 
 // port 4000에서 server 실행 및 callback
 app.listen(app.get("port"), () => {
@@ -29,23 +24,32 @@ process.once('SIGINT', async () => {
   process.exit(0);
 });
 
-
+app.get("/", (req: Request, res: Response) => {
+  res.sendFile(path.join(__dirname, "/todo_app/build/index.html"));
+});
 
 // --- DB ---
-const mongoose = require('mongoose');
+import mongoose from "mongoose";
 // protocol:// + username:password@cluster-url/database?retryWrites=true&w=majority
 const uri = "mongodb+srv://ewjeon:doiAwDjOHuSfDf4p@cluster0.vnq3j1u.mongodb.net/todo?retryWrites=true&w=majority&appName=Cluster0";
-const clientOptions = { 
-  serverApi: { 
+
+const clientOptions = {
+  serverApi: {
     version: '1',
     strict: true,
-    deprecationErrors: true 
-  } 
+    deprecationErrors: true
+  }
 };
 
 async function conn() {
   try {
-    (await mongoose.connect(uri, clientOptions));
+    await mongoose.connect(uri, {
+      serverApi: {
+        version: '1',
+        strict: true,
+        deprecationErrors: true
+      }
+    });
     await mongoose.connection.db.admin().command({ ping: 1 });
   } catch (error) {
     console.log(error);
@@ -67,17 +71,66 @@ mongoose.connection.on('close', () => console.log('close'));
 conn()
   .catch(console.dir);
 
-const User = require('./schemas/user');
-async function insertTest () {
-  const user = new User({
-    google_id: 'wjs***',
-    email: 'wjs***@***',
-    name: 'ew***'
-  });
-  console.log(user);
-  await user.save();
-  const Users = await User.find();
-  console.log(Users);
-};
 
-insertTest();
+// import User from "./schemas/user";
+// import Todo from "./schemas/todo";
+
+// async function insertTest() {
+//   const before = await User.findOneAndDelete({ sns_id: 'wjs***' });
+
+//   const user = new User({
+//     sns_id: 'wjs***',
+//     sns_type: 'google',
+//     email: 'wjs***@***',
+//     name: 'ew***'
+//   });
+//   await user.save();
+
+//   const after = await User.findOne({ sns_id: 'wjs***' });
+
+//   console.log(`before: ${before},\nafter: ${after}`);
+// };
+
+// insertTest();
+
+
+// function saveUser() {
+//   if (null === User.findOne()) {
+
+//   }
+//   const user = new User({
+//     sns_id: 'wjs***',
+//     sns_type: 'google',
+//     email: 'wjs***@***',
+//     name: 'ew***'
+//   });
+//   await user.save();
+// }
+
+function findOneUser() {
+
+}
+
+function updateUser() {
+
+}
+
+function deleteUser() {
+
+}
+
+const saveTodo = () => {
+
+}
+
+const findAllTodo = () => {
+
+}
+
+const updateTodo = () => {
+
+}
+
+const deleteTodo = () => {
+
+}

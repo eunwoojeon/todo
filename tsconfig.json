@@ -1,12 +1,6 @@
 {
   "compilerOptions": {
-    "target": "ES6", // compile 결과물의 js 버전
-    "lib": [ // target에서 제공하는 기본값 외에 커스텀하여 사용할 type lib(ex. es5에서 es6의 promise가 사용하고 싶을 때)
-      "dom",
-      "dom.iterable",
-      "esnext",
-      "ES6"
-    ],
+    "target": "es6", // compile 결과물의 js 버전
     "allowJs": true, // .js 파일 사용을 허용
     "skipLibCheck": true, // 타입 선언 파일(.d.ts)의 type checking skip을 허용(compile 시간 단축)
     "esModuleInterop": true,
@@ -14,12 +8,20 @@
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
-    "module": "esnext",
+    "module": "commonjs",
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true, // 모듈을 개별적으로 컴파일, ts compile가 단일 파일 단위로 컴파일을 허용하여 다른 트랜스파일러와 호환성을 높임
-    "noEmit": true, // typescript compile가 .js 출력 파일을 만들지 않도록 설정
-    "jsx": "react-jsx" // JSX 코드를 .js 파일로 compile
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "pretty": true,
+    "sourceMap": true,
+    "outDir": "./dist", // compile된 .js 파일 생성 경로
+    "noEmit": false, // typescript compile가 .js 파일을 출력하도록 설정
+    "typeRoots": [ // @types packages 경로
+      "./src/types/express.d.ts",
+      "./node_modules/@types"
+    ]
   },
   "include": [
     "src"
