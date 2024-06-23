@@ -72,26 +72,26 @@ conn()
   .catch(console.dir);
 
 
-// import User from "./schemas/user";
-// import Todo from "./schemas/todo";
+import User from "./schemas/user";
+import Todo from "./schemas/todo";
 
-// async function insertTest() {
-//   const before = await User.findOneAndDelete({ sns_id: 'wjs***' });
+async function insertTest() {
+  const before = await User.findOneAndDelete({ sns_id: 'wjs***' });
 
-//   const user = new User({
-//     sns_id: 'wjs***',
-//     sns_type: 'google',
-//     email: 'wjs***@***',
-//     name: 'ew***'
-//   });
-//   await user.save();
+  const user = new User({
+    sns_id: 'wjs***',
+    sns_type: 'google',
+    email: 'wjs***@***',
+    name: 'ew***'
+  });
+  await user.save();
 
-//   const after = await User.findOne({ sns_id: 'wjs***' });
+  const after = await User.findOne({ sns_id: 'wjs***' });
 
-//   console.log(`before: ${before},\nafter: ${after}`);
-// };
+  console.log(`before: ${before},\nafter: ${after}`);
+};
 
-// insertTest();
+insertTest();
 
 
 // function saveUser() {
