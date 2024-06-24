@@ -2,6 +2,7 @@ import React, { useRef, useState } from 'react'
 import { TodoInputProps } from '../types/components';
 import { RecoilState, useRecoilState } from 'recoil';
 import { todoTitleState, todoDescriptionState } from '../state/todoAtoms';
+import axios from 'axios';
 
 const useInput = (initialValue: RecoilState<string>) => {
   const [value, setValue] = useRecoilState(initialValue);
@@ -40,3 +41,7 @@ const TodoInputSection: React.FC = () => {
 }
 
 export default TodoInputSection
+
+// const getTest = async () => {
+//   await axios.get('http://localhost:4000/user').then(console.log).catch(console.error)
+// }

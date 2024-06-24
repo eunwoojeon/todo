@@ -1,21 +1,29 @@
 // --- SERVER ---
 // node.js 함수로 외부 모듈 import
-import express, {Request, Response} from "express";
+import express, {NextFunction, Request, Response} from "express";
 import path from "path";
 
-const app = express();
+const server = express();
 const port = 4000;
 
-app.set("port", port); // express에 port=4000 setting
+server.set("port", port); // express에 port=4000 setting
+
+// CORS 방지 : localhost:5000에 한해서 리소스 요청을 허용함
+server.use((req: Request, res: Response, next: NextFunction) => {
+  res.header('Access-Control-Allow-Origin', 'http://localhost:5000');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+  res.header('Access-Control-Allow-Headers', 'Content-Type');
+  next();
+});
 
 // express.static(root) : 정적 파일(css, js, image) 제공 경로 지정
 // - 현재 폴더의 절대경로(__dirname)
 // - ex) http://localhost:4000/ === __dirname/todo_app/build/
-app.use(express.static(path.join(__dirname, "todo_app/build")));
+server.use(express.static(path.join(__dirname, "../todo_app/build")));
 
 // port 4000에서 server 실행 및 callback
-app.listen(app.get("port"), () => {
-  console.log(app.get("port"), "번 포트에서 대기중.."); // callback
+server.listen(server.get("port"), () => {
+  console.log(server.get("port"), "번 포트에서 대기중.."); // callback
 });
 
 process.once('SIGINT', async () => {
@@ -24,9 +32,27 @@ process.once('SIGINT', async () => {
   process.exit(0);
 });
 
-app.get("/", (req: Request, res: Response) => {
+server.get("/", (req: Request, res: Response) => {
   res.sendFile(path.join(__dirname, "/todo_app/build/index.html"));
 });
+
+server.route('/user')
+  .get((req: Request, res: Response) => {
+    // const reqTest1 = req.query.req;
+    // const reqTest2 = req.params.req;
+    // console.log("req test1 : " + reqTest1);
+    // console.log("req test2 : " + reqTest2);
+    res.send("test 성공?");
+  })
+  .post((req: Request, res: Response) => {})
+  .put((req: Request, res: Response) => {})
+  .delete((req: Request, res: Response) => {});
+
+server.route('/todo')
+  .get((req: Request, res: Response) => {})
+  .post((req: Request, res: Response) => {})
+  .put((req: Request, res: Response) => {})
+  .delete((req: Request, res: Response) => {});
 
 // --- DB ---
 import mongoose from "mongoose";
@@ -94,18 +120,9 @@ async function insertTest() {
 insertTest();
 
 
-// function saveUser() {
-//   if (null === User.findOne()) {
+function saveUser() {
 
-//   }
-//   const user = new User({
-//     sns_id: 'wjs***',
-//     sns_type: 'google',
-//     email: 'wjs***@***',
-//     name: 'ew***'
-//   });
-//   await user.save();
-// }
+}
 
 function findOneUser() {
 
