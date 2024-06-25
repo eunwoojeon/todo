@@ -22,10 +22,6 @@ server.use((req: Request, res: Response, next: NextFunction) => {
 // - ex) http://localhost:4000/ === __dirname/todo_app/build/
 server.use(express.static(path.join(__dirname, "../todo_app/build")));
 server.use(bodyParser.json()); // node.js 모듈, request data의 body parse를 자동으로 실행
-server.use((err: Error, req: Request, res: Response, next: NextFunction) => { // 에러 핸들링
-  console.error(err.stack);
-  res.status(500).json(err.message);
-})
 server.use((req: Request, res: Response, next: NextFunction) => { // CORS 방지
   res.header('Access-Control-Allow-Origin', 'http://localhost:5000');
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
@@ -59,22 +55,32 @@ server.route('/user')
 server.route('/todo')
   .get(async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const data = await findTodoByUserId(req.query.user_id as string);
-      res.status(200).json(data);
-    } catch (err) {
-      next(err);
+      const data = await findAllTodoByUserId(req.query.user_id as string);
+      res.status(200).json(['TODO] Find data successfully', data]);
+    } catch (err: any) {
+      console.error(err.stack);
+      res.status(500).json('TODO] Failed to find data');
     }
   })
   .post(async (req: Request, res: Response, next: NextFunction) => {
     try {
       const msg = await saveTodo(req.body.user_id, req.body.title, req.body.desc);
       res.status(200).json(msg);
-    } catch (err) {
-      next(err);
+    } catch (err: any) {
+      console.error(err.stack);
+      res.status(500).json(err.message);
     }
   })
   .put((req: Request, res: Response) => { })
-  .delete((req: Request, res: Response) => { });
+  .delete(async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const msg = await deleteTodoById(req.query._id as string);
+      res.status(200).json(msg);
+    } catch (err: any) {
+      console.error(err.stack);
+      res.status(500).json(err.message);
+    }
+  });
 
 // --- DB ---
 import mongoose from "mongoose";
@@ -149,13 +155,13 @@ const saveTodo = async (user_id: string, title: string, desc: string): Promise<s
 
   const result = await todo.save();
   if (result === todo) {
-    return 'TODO] Data saved successfully';
+    return 'TODO] Save data successfully';
   } else {
-    throw 'TODO] Data save failed';
+    throw 'TODO] Failed to save data';
   }
 }
 
-const findTodoByUserId = async (user_id: string) => {
+const findAllTodoByUserId = async (user_id: string) => {
   const result = await Todo.find({ user_id: user_id });
   return result;
 }
@@ -165,5 +171,11 @@ const updateTodo = async (id: string, title: string, desc: string, status: strin
 }
 
 const deleteTodoById = async (id: string) => {
-  const result = await Todo.findByIdAndDelete({ _id: id });
+  const result = await Todo.deleteOne({ _id: id });
+
+  if (result.acknowledged && result.deletedCount === 1) {
+    return 'TODO] Delete data successfully';
+  } else {
+    throw new Error('TODO] Failed to delete data');
+  }
 }

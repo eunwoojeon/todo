@@ -1,9 +1,6 @@
 import React from 'react'
 import TodoInputSection from './TodoInputSection'
 import TodoListSection from './TodoListSection'
-import { RecoilState, useRecoilState } from 'recoil';
-import { todoTitleState, todoDescriptionState } from '../state/todoAtoms';
-import { TodoArray } from '../types/components';
 
 const TodoApp: React.FC = () => {
 
