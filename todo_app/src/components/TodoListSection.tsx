@@ -28,7 +28,10 @@ const TodoListSection: React.FC = () => {
     const _id = e.target.dataset.id;
     axios
       .delete('http://localhost:4000/todo', { params: { _id: _id } })
-      .then(console.log)
+      .then((res) => {
+        console.log(res);
+        getTodoList();
+      })
       .catch(console.error);
   }
 
