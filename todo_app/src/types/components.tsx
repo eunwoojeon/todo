@@ -1,9 +1,4 @@
-export type TodoInputProps = {
-    text: string;
-    id: string;
-    placeholder: string;
-    state: any;
-}
+import { RecoilState } from "recoil";
 
 export type TodoInputSectionProps = {
     addTodo: React.MouseEventHandler<HTMLButtonElement>;
@@ -22,5 +17,3 @@ export type TodoItem = {
     createAt: string;
     updateAt: string;
 };
-// type Item = [string, string];
-// export type TodoArray = Item[];

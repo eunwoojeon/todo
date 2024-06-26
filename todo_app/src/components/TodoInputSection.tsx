@@ -1,22 +1,10 @@
-import React, { useRef, useState } from 'react'
-import { TodoInputProps, TodoInputSectionProps } from '../types/components';
-import { RecoilState, useRecoilState } from 'recoil';
+import { useRecoilState } from 'recoil';
 import { todoTitleState, todoDescriptionState, todoListState, editIdState } from '../state/todoAtoms';
-import { useInput } from '../hooks/useInput';
 import axios from 'axios';
-
-const TodoInput: React.FC<TodoInputProps> = ({ text, id, placeholder, state }) => {
-  const onChangeEvent = useInput(state);
-  return (
-    <label htmlFor={id}> {text}
-      <input className='input-font' id={id} type='text' placeholder={placeholder} {...onChangeEvent} />
-    </label>
-  )
-}
 
 const TodoInputSection: React.FC = () => {
   const [todoTitle, setTodoTitle] = useRecoilState(todoTitleState);
-  const [todoDescription, setTodoDescription] = useRecoilState(todoDescriptionState);
+  const [todoDesc, setTodoDesc] = useRecoilState(todoDescriptionState);
   const [todoList, setTodoList] = useRecoilState(todoListState);
   const [editId, setEditId] = useRecoilState(editIdState);
 
@@ -24,7 +12,7 @@ const TodoInputSection: React.FC = () => {
     const body = {
       user_id: '6679a48b2804245d4d7c2d1d',
       title: todoTitle,
-      desc: todoDescription
+      desc: todoDesc
     }
     axios
       .post('http://localhost:4000/todo', body)
@@ -32,7 +20,7 @@ const TodoInputSection: React.FC = () => {
         console.log(res);
         getTodoList();
         setTodoTitle('');
-        setTodoDescription('');
+        setTodoDesc('');
       })
       .catch(console.error);
   }
@@ -50,8 +38,12 @@ const TodoInputSection: React.FC = () => {
 
   return (
     <div>
-      <TodoInput text={'할 일'} id={'todo-title'} placeholder={'제목을 입력하세요.'} state={todoTitleState} />
-      <TodoInput text={'상세'} id={'todo-description'} placeholder={'할 일을 입력하세요.'} state={todoDescriptionState} />
+      <label htmlFor='todo-title'> 할 일
+        <input id='todo-title' className='input-font' type='text' placeholder={'제목을 입력하세요.'} value={todoTitle} onChange={e => setTodoTitle(e.target.value)} />
+      </label>
+      <label htmlFor='todo-desc'>
+        <input id='todo-desc' className='input-font' type='text' placeholder={'할 일을 입력하세요.'} value={todoDesc} onChange={e => setTodoDesc(e.target.value)} />
+      </label>
       <button className='addBtn' onClick={addTodo}>+</button>
     </div>
   )
