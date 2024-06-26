@@ -53,7 +53,7 @@ server.route('/user')
   .delete((req: Request, res: Response) => { });
 
 server.route('/todo')
-  .get(async (req: Request, res: Response, next: NextFunction) => {
+  .get(async (req: Request, res: Response) => {
     try {
       const data = await findAllTodoByUserId(req.query.user_id as string);
       res.status(200).json(['TODO] Find data successfully', data]);
@@ -62,7 +62,7 @@ server.route('/todo')
       res.status(500).json('TODO] Failed to find data');
     }
   })
-  .post(async (req: Request, res: Response, next: NextFunction) => {
+  .post(async (req: Request, res: Response) => {
     try {
       const msg = await saveTodo(req.body.user_id, req.body.title, req.body.desc);
       res.status(200).json(msg);
@@ -71,8 +71,15 @@ server.route('/todo')
       res.status(500).json(err.message);
     }
   })
-  .put((req: Request, res: Response) => { })
-  .delete(async (req: Request, res: Response, next: NextFunction) => {
+  .put(async (req: Request, res: Response) => {
+    try {
+      const msg = await updateStatus(req.query._id as string, req.query.status as string);
+    } catch (err: any) {
+      console.error(err.stack);
+      res.status(500).json(err.message);
+    }
+  })
+  .delete(async (req: Request, res: Response) => {
     try {
       const msg = await deleteTodoById(req.query._id as string);
       res.status(200).json(msg);
@@ -81,6 +88,16 @@ server.route('/todo')
       res.status(500).json(err.message);
     }
   });
+
+server.post('/todo/edit', async (req: Request, res: Response) => {
+  try {
+    const msg = await updateTodo(req.body._id, req.body.title, req.body.desc);
+    res.status(200).json(msg);
+  } catch (err: any) {
+    console.error(err.stack);
+    res.status(500).json(err.message);
+  }
+})
 
 // --- DB ---
 import mongoose from "mongoose";
@@ -166,14 +183,30 @@ const findAllTodoByUserId = async (user_id: string) => {
   return result;
 }
 
-const updateTodo = async (id: string, title: string, desc: string, status: string) => {
-  const result = await Todo.findOneAndUpdate({ _id: id }, {title: title, description: desc, status: status});
+const updateTodo = async (id: string, title: string, desc: string) => {
+  const result = await Todo.updateOne({ _id: id }, { title: title, description: desc }, { upsert: false });
+
+  if (true === result.acknowledged && 1 === result.modifiedCount) {
+    return 'TODO] Update data successfully';
+  } else {
+    throw new Error('TODO] Failed to update data');
+  }
+}
+
+const updateStatus = async (id: string, status: string) => {
+  const result = await Todo.updateOne({ _id: id }, { status: status }, { upsert: false });
+
+  if (true === result.acknowledged && 1 === result.modifiedCount) {
+    return 'TODO] Update status successfully';
+  } else {
+    throw new Error('TODO] Failed to update status');
+  }
 }
 
 const deleteTodoById = async (id: string) => {
   const result = await Todo.deleteOne({ _id: id });
 
-  if (result.acknowledged && result.deletedCount === 1) {
+  if (true === result.acknowledged && 1 === result.deletedCount) {
     return 'TODO] Delete data successfully';
   } else {
     throw new Error('TODO] Failed to delete data');

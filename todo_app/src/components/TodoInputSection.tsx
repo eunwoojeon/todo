@@ -1,22 +1,15 @@
 import React, { useRef, useState } from 'react'
 import { TodoInputProps, TodoInputSectionProps } from '../types/components';
 import { RecoilState, useRecoilState } from 'recoil';
-import { todoTitleState, todoDescriptionState, todoListState } from '../state/todoAtoms';
+import { todoTitleState, todoDescriptionState, todoListState, editIdState } from '../state/todoAtoms';
+import { useInput } from '../hooks/useInput';
 import axios from 'axios';
 
-const useInput = (initialValue: RecoilState<string>) => {
-  const [value, setValue] = useRecoilState(initialValue);
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setValue(e.target.value);
-  }
-  return { value, onChange }
-}
-
 const TodoInput: React.FC<TodoInputProps> = ({ text, id, placeholder, state }) => {
-  const item = useInput(state);
+  const onChangeEvent = useInput(state);
   return (
     <label htmlFor={id}> {text}
-      <input className='input-font' id={id} type='text' placeholder={placeholder} {...item} />
+      <input className='input-font' id={id} type='text' placeholder={placeholder} {...onChangeEvent} />
     </label>
   )
 }
@@ -25,6 +18,7 @@ const TodoInputSection: React.FC = () => {
   const [todoTitle, setTodoTitle] = useRecoilState(todoTitleState);
   const [todoDescription, setTodoDescription] = useRecoilState(todoDescriptionState);
   const [todoList, setTodoList] = useRecoilState(todoListState);
+  const [editId, setEditId] = useRecoilState(editIdState);
 
   const addTodo = async () => {
     const body = {
@@ -48,6 +42,7 @@ const TodoInputSection: React.FC = () => {
       .get('http://localhost:4000/todo', { params: { user_id: '6679a48b2804245d4d7c2d1d' } })
       .then((res) => {
         console.log(res)
+        setEditId('');
         setTodoList(res.data[1]);
       })
       .catch(console.error);
