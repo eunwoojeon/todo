@@ -18,7 +18,9 @@
   },
   "homepage": "https://github.com/eunwoojeon/todo#readme",
   "dependencies": {
+    "axios": "^1.7.2",
     "express": "^4.19.2",
+    "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.4.1"
   },
   "devDependencies": {
