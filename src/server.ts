@@ -1,6 +1,8 @@
 // --- SERVER ---
 // node.js 함수로 외부 모듈 import
 import express, { NextFunction, Request, Response } from "express";
+import jwt from "jsonwebtoken";
+import DatabaseManager from './db/databaseManager';
 import path, { resolve } from "path";
 import bodyParser from "body-parser";
 
@@ -29,6 +31,8 @@ server.use((req: Request, res: Response, next: NextFunction) => { // CORS 방지
   next();
 });
 
+const dbmanager = new DatabaseManager();
+
 // port 4000에서 server 실행 및 callback
 server.listen(server.get("port"), () => {
   console.log(server.get("port"), "번 포트에서 대기중.."); // callback
@@ -36,7 +40,7 @@ server.listen(server.get("port"), () => {
 
 process.once('SIGINT', async () => {
   console.log('mongoDB disconnecting');
-  await disconn();
+  await dbmanager.disconnet();
   process.exit(0);
 });
 
@@ -52,163 +56,80 @@ server.route('/user')
   .put((req: Request, res: Response) => { })
   .delete((req: Request, res: Response) => { });
 
+// server.post('user/signup', async (req: Request, res: Response) => {
+//   try {
+//     const decodedToken = jwt.decode(req.body.token);
+//     // const msg = await dbmanager.saveUser(decodedToken.sub, decodedToken.email, 'GOOGLE', decodedToken.);
+//     res.status(200).json(decodedToken);
+//   } catch (err) {
+//     if (err instanceof Error) {
+//       console.error(err.stack);
+//       res.status(500).json(err.message);
+//     }
+//   }
+// })
+
+server.post('user/signin', async (req: Request, res: Response) => {
+  try {
+    const decodedToken = jwt.decode(req.body.token);
+    // const msg = await dbmanager.saveUser(decodedToken.sub, decodedToken.email, 'GOOGLE', decodedToken.);
+    res.status(200).json(decodedToken);
+  } catch (err) {
+    if (err instanceof Error) {
+      console.error(err.stack);
+      res.status(500).json(err.message);
+    }
+  }
+})
+
 server.route('/todo')
   .get(async (req: Request, res: Response) => {
     try {
-      const data = await findAllTodoByUserId(req.query.user_id as string);
+      const data = await dbmanager.findAllTodoByUserId(req.query.user_id as string);
       res.status(200).json(['TODO] Find data successfully', data]);
-    } catch (err: any) {
-      console.error(err.stack);
-      res.status(500).json('TODO] Failed to find data');
+    } catch (err) {
+      if (err instanceof Error) {
+        console.error(err.stack);
+        res.status(500).json('TODO] Failed to find data');
+      }
     }
   })
   .post(async (req: Request, res: Response) => {
     try {
-      const msg = await saveTodo(req.body.user_id, req.body.title, req.body.desc);
-      res.status(200).json(msg);
-    } catch (err: any) {
-      console.error(err.stack);
-      res.status(500).json(err.message);
+      if ('create' === req.query.write) {
+        const msg = await dbmanager.saveTodo(req.body.user_id, req.body.title, req.body.desc);
+        res.status(200).json(msg);
+      } else if ('update' === req.query.write) {
+        const msg = await dbmanager.updateTodo(req.body._id, req.body.title, req.body.desc);
+        res.status(200).json(msg);
+      } else {
+        res.status(500).json('TODO] Invalid parameter');
+      }
+    } catch (err) {
+      if (err instanceof Error) {
+        console.error(err.stack);
+        res.status(500).json(err.message);
+      }
     }
   })
   .put(async (req: Request, res: Response) => {
     try {
-      const msg = await updateStatus(req.query._id as string, req.query.status as string);
-    } catch (err: any) {
-      console.error(err.stack);
-      res.status(500).json(err.message);
+      const msg = await dbmanager.updateStatus(req.query._id as string, req.query.status as string);
+    } catch (err) {
+      if (err instanceof Error) {
+        console.error(err.stack);
+        res.status(500).json(err.message);
+      }
     }
   })
   .delete(async (req: Request, res: Response) => {
     try {
-      const msg = await deleteTodoById(req.query._id as string);
+      const msg = await dbmanager.deleteTodoById(req.query._id as string);
       res.status(200).json(msg);
-    } catch (err: any) {
-      console.error(err.stack);
-      res.status(500).json(err.message);
+    } catch (err) {
+      if (err instanceof Error) {
+        console.error(err.stack);
+        res.status(500).json(err.message);
+      }
     }
   });
-
-server.post('/todo/edit', async (req: Request, res: Response) => {
-  try {
-    const msg = await updateTodo(req.body._id, req.body.title, req.body.desc);
-    res.status(200).json(msg);
-  } catch (err: any) {
-    console.error(err.stack);
-    res.status(500).json(err.message);
-  }
-})
-
-// --- DB ---
-import mongoose from "mongoose";
-// protocol:// + username:password@cluster-url/database?retryWrites=true&w=majority
-const uri = "mongodb+srv://ewjeon:doiAwDjOHuSfDf4p@cluster0.vnq3j1u.mongodb.net/todo?retryWrites=true&w=majority&appName=Cluster0";
-
-const clientOptions = {
-  serverApi: {
-    version: '1',
-    strict: true,
-    deprecationErrors: true
-  }
-};
-
-async function conn() {
-  try {
-    await mongoose.connect(uri, {
-      serverApi: {
-        version: '1',
-        strict: true,
-        deprecationErrors: true
-      }
-    });
-    await mongoose.connection.db.admin().command({ ping: 1 });
-  } catch (error) {
-    console.log(error);
-    await mongoose.disconnect();
-  }
-}
-
-async function disconn() {
-  await mongoose.disconnect();
-}
-
-mongoose.connection.on('connected', () => console.log('connected'));
-mongoose.connection.on('open', () => console.log('open'));
-mongoose.connection.on('disconnected', () => console.log('disconnected'));
-mongoose.connection.on('reconnected', () => console.log('reconnected'));
-mongoose.connection.on('disconnecting', () => console.log('disconnecting'));
-mongoose.connection.on('close', () => console.log('close'));
-
-conn()
-  .catch(console.dir);
-
-
-import User from "./schemas/user";
-import Todo from "./schemas/todo";
-
-function saveUser() {
-
-}
-
-function findOneUser() {
-
-}
-
-function updateUser() {
-
-}
-
-function deleteUser() {
-
-}
-
-const saveTodo = async (user_id: string, title: string, desc: string): Promise<string> => {
-  const todo = new Todo({
-    user_id: user_id,
-    title: title,
-    description: desc,
-    status: 'pending'
-  });
-
-  const result = await todo.save();
-  if (result === todo) {
-    return 'TODO] Save data successfully';
-  } else {
-    throw 'TODO] Failed to save data';
-  }
-}
-
-const findAllTodoByUserId = async (user_id: string) => {
-  const result = await Todo.find({ user_id: user_id });
-  return result;
-}
-
-const updateTodo = async (id: string, title: string, desc: string) => {
-  const result = await Todo.updateOne({ _id: id }, { title: title, description: desc }, { upsert: false });
-
-  if (true === result.acknowledged && 1 === result.modifiedCount) {
-    return 'TODO] Update data successfully';
-  } else {
-    throw new Error('TODO] Failed to update data');
-  }
-}
-
-const updateStatus = async (id: string, status: string) => {
-  const result = await Todo.updateOne({ _id: id }, { status: status }, { upsert: false });
-
-  if (true === result.acknowledged && 1 === result.modifiedCount) {
-    return 'TODO] Update status successfully';
-  } else {
-    throw new Error('TODO] Failed to update status');
-  }
-}
-
-const deleteTodoById = async (id: string) => {
-  const result = await Todo.deleteOne({ _id: id });
-
-  if (true === result.acknowledged && 1 === result.deletedCount) {
-    return 'TODO] Delete data successfully';
-  } else {
-    throw new Error('TODO] Failed to delete data');
-  }
-}

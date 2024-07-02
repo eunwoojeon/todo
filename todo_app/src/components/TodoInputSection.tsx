@@ -15,7 +15,7 @@ const TodoInputSection: React.FC = () => {
       desc: todoDesc
     }
     axios
-      .post('http://localhost:4000/todo', body)
+      .post('http://localhost:4000/todo', body, { params: { write: 'create' } })
       .then((res) => {
         console.log(res);
         getTodoList();

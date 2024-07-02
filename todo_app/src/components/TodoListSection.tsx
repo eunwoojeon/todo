@@ -1,12 +1,10 @@
 import React from 'react'
 import { useRecoilState } from 'recoil';
-import { userIdState } from '../state/userAtoms';
 import { editDescriptionState, editIdState, editTitleState, todoListState } from '../state/todoAtoms';
 import { TodoItem } from '../types/components';
 import axios from 'axios';
 
 const TodoListSection: React.FC = () => {
-  const [userId, setUserId] = useRecoilState(userIdState);
   const [todoList, setTodoList] = useRecoilState(todoListState);
   const [editId, setEditId] = useRecoilState(editIdState);
   const [editTitle, setEditTitle] = useRecoilState(editTitleState);
@@ -51,7 +49,7 @@ const TodoListSection: React.FC = () => {
       desc: editDesc
     }
     axios
-      .post('http://localhost:4000/todo/edit', body)
+      .post('http://localhost:4000/todo', body, { params: { write: 'update' } })
       .then((res) => {
         console.log(res);
         getTodoList();

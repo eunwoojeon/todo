@@ -1,0 +1,1 @@
+export type SNS_TYPE = 'GUEST' | 'GOOGLE'

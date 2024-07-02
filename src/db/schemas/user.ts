@@ -1,7 +1,13 @@
-import mongoose from "mongoose";
+import mongoose, { Schema } from "mongoose";
+const { ObjectId } = Schema.Types;
 
 const userSchema = new mongoose.Schema({
-  sns_id: {
+  sub: {
+    type: ObjectId,
+    required: true,
+    unique: true
+  },
+  email: {
     type: String,
     required: true,
     unique: true
@@ -9,11 +15,6 @@ const userSchema = new mongoose.Schema({
   sns_type: {
     type: String,
     required: true
-  },
-  email: {
-    type: String,
-    required: true,
-    unique: true
   },
   name: {
     type: String,
@@ -25,7 +26,7 @@ const userSchema = new mongoose.Schema({
   }
 }, {
   timestamps: true,
-  versionKey : false
+  versionKey: false
 });
 
 const User = mongoose.model('User', userSchema);
