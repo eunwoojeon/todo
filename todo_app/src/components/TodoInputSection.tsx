@@ -1,6 +1,7 @@
 import { useRecoilState } from 'recoil';
 import { todoTitleState, todoDescriptionState, todoListState, editIdState } from '../state/todoAtoms';
 import axios from 'axios';
+import CustomInput from './CustomInput';
 
 const TodoInputSection: React.FC = () => {
   const [todoTitle, setTodoTitle] = useRecoilState(todoTitleState);
@@ -14,6 +15,7 @@ const TodoInputSection: React.FC = () => {
       title: todoTitle,
       desc: todoDesc
     }
+    console.log(body);
     axios
       .post('http://localhost:4000/todo', body, { params: { write: 'create' } })
       .then((res) => {
@@ -38,12 +40,8 @@ const TodoInputSection: React.FC = () => {
 
   return (
     <div>
-      <label htmlFor='todo-title'> 할 일
-        <input id='todo-title' className='input-font' type='text' placeholder={'제목을 입력하세요.'} value={todoTitle} onChange={e => setTodoTitle(e.target.value)} />
-      </label>
-      <label htmlFor='todo-desc'>
-        <input id='todo-desc' className='input-font' type='text' placeholder={'할 일을 입력하세요.'} value={todoDesc} onChange={e => setTodoDesc(e.target.value)} />
-      </label>
+      <CustomInput text={'제목'} recoilState={todoTitleState}/>
+      <CustomInput text={'할일'} recoilState={todoDescriptionState}/>
       <button className='addBtn' onClick={addTodo}>+</button>
     </div>
   )

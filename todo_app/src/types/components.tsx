@@ -8,7 +8,7 @@ export type TodoListSectionProps = {
     user_id: string;
 }
 
-export type TodoItem = {
+export interface TodoItem {
     _id: string;
     user_id: string;
     title: string;
@@ -16,4 +16,16 @@ export type TodoItem = {
     status: string;
     createAt: string;
     updateAt: string;
+};
+
+export interface User {
+    email: string;
+    name: string;
+    picture: string;
+    isLogin: boolean;
+};
+
+export interface CustomInputProps {
+    text: string;
+    recoilState: RecoilState<string>;
 };
