@@ -11,14 +11,6 @@ const port = 4000;
 
 server.set("port", port); // express에 port=4000 setting
 
-// CORS 방지 : localhost:5000에 한해서 리소스 요청을 허용함
-server.use((req: Request, res: Response, next: NextFunction) => {
-  res.header('Access-Control-Allow-Origin', 'http://localhost:5000');
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-  res.header('Access-Control-Allow-Headers', 'Content-Type');
-  next();
-});
-
 // express.static(root) : 정적 파일(css, js, image) 제공 경로 지정
 // - 현재 폴더의 절대경로(__dirname)
 // - ex) http://localhost:4000/ === __dirname/todo_app/build/

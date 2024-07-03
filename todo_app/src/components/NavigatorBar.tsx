@@ -1,10 +1,9 @@
-import { useGoogleLogin } from "@react-oauth/google"
 import Modal from 'react-modal';
-import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import CustomInput from "./CustomInput";
 import { emailState, passwordState } from "../state/userAtoms";
+import GoogleLoginButton from './GoogleLoginButton';
 
 const NavigatorBar: React.FC = () => {
   const [email, setEmail] = useRecoilState(emailState);
@@ -26,19 +25,6 @@ const NavigatorBar: React.FC = () => {
     }
   }
 
-  const googleLogin = useGoogleLogin({
-    onSuccess: (credentialResponse: any) => {
-      const body = {
-        token: credentialResponse.credential
-      }
-      axios
-        .post('http://localhost:4000/login/google', body)
-        .then(console.log)
-        .catch(console.error);
-    },
-    onError: () => console.log('Login Failed')
-  });
-
   return (
     <div>
       NavigatorBar
@@ -50,11 +36,12 @@ const NavigatorBar: React.FC = () => {
         ariaHideApp={false}>
         <h1>Log In</h1>
         <button onClick={closeModal}>닫기</button>
-        <button onClick={() => { googleLogin() }}>google</button>
+        <GoogleLoginButton/>
+        <button>Guest 계정으로 로그인</button>
         or
-        <CustomInput text={'Email'} recoilState={emailState}/>
-        <CustomInput text={'Password'} recoilState={passwordState}/>
-        <button onClick={closeModal}>Log In</button>
+        <CustomInput text={'Email'} recoilState={emailState} />
+        <CustomInput text={'Password'} recoilState={passwordState} />
+        <button>Log In</button>
       </Modal>
     </div>
   )
