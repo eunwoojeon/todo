@@ -1,14 +1,33 @@
 import React, { useEffect } from 'react'
 import { useGoogleLogin, GoogleLogin } from "@react-oauth/google"
+import axios from 'axios';
+import { useRecoilState } from 'recoil';
+import { userState } from '../state/userAtoms';
 
 const GoogleLoginButton: React.FC = () => {
-  const login = useGoogleLogin({
-    onSuccess: tokenResponse => console.log(tokenResponse)
-  });
+  const [user, setUser] = useRecoilState(userState);
 
   return (
     <div>
-      <button onClick={() => login()}>google로그인</button>
+      <GoogleLogin
+        onSuccess={credentialResponse => {
+          console.log(credentialResponse);
+          const body = {
+            token: credentialResponse.credential
+          }
+          axios
+            .post('http://localhost:4000/user/login/google', body, { withCredentials: true })
+            .then((res) => {
+              console.log(res.data);
+              const isLogin = true;
+              setUser({isLogin, ...res.data}); // login
+            })
+            .catch(console.error);
+        }}
+        onError={() => {
+          console.log('react-oauth/google]Login Failed');
+        }}
+      />;
     </div>
   )
 }

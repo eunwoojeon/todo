@@ -1,14 +1,14 @@
 import Modal from 'react-modal';
 import { useEffect, useState } from "react";
-import { useRecoilState } from "recoil";
-import CustomInput from "./CustomInput";
-import { emailState, passwordState } from "../state/userAtoms";
+import { useRecoilState, useResetRecoilState } from "recoil";
+import { userState } from "../state/userAtoms";
 import GoogleLoginButton from './GoogleLoginButton';
+import axios from 'axios';
 
 const NavigatorBar: React.FC = () => {
-  const [email, setEmail] = useRecoilState(emailState);
-  const [password, setPassword] = useRecoilState(passwordState);
+  const [user, setUser] = useRecoilState(userState);
   const [isOpen, setIsOpen] = useState(false);
+  const resetUser = useResetRecoilState(userState);
   const openModal = () => setIsOpen(true);
   const closeModal = () => setIsOpen(false);
   const customStyles = {
@@ -25,10 +25,54 @@ const NavigatorBar: React.FC = () => {
     }
   }
 
+  useEffect(() => {
+    checkLogin();
+  }, []);
+
+  const checkLogin = async () => {
+    await axios
+      .get('/checksession')
+      .then((res) => {
+        console.log(res);
+        if (res.data.isLogin) {
+          const user = {
+            email: res.data.email,
+            name: res.data.name,
+            picture: res.data.picture,
+            isLogin: res.data.isLogin
+          }
+          setUser(user);
+        } else {
+          const user = {
+            email: '',
+            name: '',
+            picture: '',
+            isLogin: false
+          }
+          setUser(user);
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  }
+
+  const logout = async () => {
+    await axios
+      .get('http://localhost:4000/user/logout/google')
+      .then((res) => {
+        console.log(res);
+        resetUser();
+      })
+      .catch(console.error);
+  }
+
+  const loginButton = user.isLogin ? <button onClick={logout}>로그아웃</button> : <button onClick={openModal}>로그인</button>
+
   return (
     <div>
       NavigatorBar
-      <button onClick={openModal}>로그인</button>
+      {loginButton}
       <Modal
         isOpen={isOpen}
         onRequestClose={closeModal}
@@ -36,12 +80,8 @@ const NavigatorBar: React.FC = () => {
         ariaHideApp={false}>
         <h1>Log In</h1>
         <button onClick={closeModal}>닫기</button>
-        <GoogleLoginButton/>
-        <button>Guest 계정으로 로그인</button>
-        or
-        <CustomInput text={'Email'} recoilState={emailState} />
-        <CustomInput text={'Password'} recoilState={passwordState} />
-        <button>Log In</button>
+        <GoogleLoginButton />
+        <button>Login as Guest</button>
       </Modal>
     </div>
   )

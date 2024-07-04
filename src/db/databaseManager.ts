@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
 // protocol:// + username:password@cluster-url/database?retryWrites=true&w=majority
 const uri = "mongodb+srv://ewjeon:doiAwDjOHuSfDf4p@cluster0.vnq3j1u.mongodb.net/todo?retryWrites=true&w=majority&appName=Cluster0";
-import User from "./schemas/user";
-import Todo from "./schemas/todo";
+import UserModel from "./schemas/user";
+import TodoModel from "./schemas/todo";
 import { SNS_TYPE } from "../types/user";
 
 export default class DatabaseManager {
@@ -14,6 +14,14 @@ export default class DatabaseManager {
     mongoose.connection.on('reconnected', () => console.log('reconnected'));
     mongoose.connection.on('disconnecting', () => console.log('disconnecting'));
     mongoose.connection.on('close', () => console.log('close'));
+  }
+
+  getMongoose() {
+    return mongoose;
+  }
+
+  getConnection() {
+    return mongoose.connection;
   }
 
   async connect() {
@@ -36,40 +44,60 @@ export default class DatabaseManager {
     mongoose.disconnect();
   }
 
-  async saveUser(_id: string, email: string, sns_type: SNS_TYPE, name: string, profile_picture: string) {
-    const objectId = new mongoose.Types.ObjectId(_id);
-    const user = new User({
-      _id: objectId,
+  //#region user
+  async saveUser(sub_id: string, email: string, sns_type: SNS_TYPE, name: string, picture: string) {
+    const filter = {sub_id: sub_id};
+    const update = {
       email: email,
       sns_type: sns_type,
       name: name,
-      profile_picture: profile_picture
-    });
+      picture: picture
+    };
+    const option = {
+      new: true, // 업데이트 성공한 document 반환
+      upsert: true // document가 없을 경우 새로 생성
+    }
 
-    const result = await user.save();
-    if (result === user) {
-      return 'USER] Save data successfully';
+    const result = await UserModel.findOneAndUpdate(filter, update, option);
+    if (null !== result) {
+      return {
+        msg: 'USER] Save data successfully',
+        data: {
+          sub_id: result.sub_id,
+          email: result.email,
+          name: result.name,
+          picture: result.picture
+        }
+      };
     } else {
-      throw 'USER] Failed to save data';
+      throw new Error('USER] Failed to save data');
     }
   }
 
-  async findOneUser(_id: string) {
-    const result = await User.findById(_id).exec();
-    console.log(result);
-    return result;
+  async findOneUser(sub_id: string) {
+    const result = await UserModel.findOne({sub_id: sub_id}).exec();
+    if (null !== result) {
+      return {
+        msg: 'USER] Save find successfully',
+        data: {...result}
+      };
+    } else {
+      throw new Error('USER] Failed to find data');
+    }
   }
 
-  async updateUser() {
+  async updateUser(sub_id: string, email: string, sns_type: SNS_TYPE, name: string, picture: string) {
 
   }
 
   async deleteUser() {
 
   }
+  //#endregion
 
+  //#region todo
   async saveTodo(user_id: string, title: string, desc: string) {
-    const todo = new Todo({
+    const todo = new TodoModel({
       user_id: user_id,
       title: title,
       description: desc,
@@ -80,17 +108,17 @@ export default class DatabaseManager {
     if (result === todo) {
       return 'TODO] Save data successfully';
     } else {
-      throw 'TODO] Failed to save data';
+      throw new Error('TODO] Failed to save data');
     }
   }
 
   async findAllTodoByUserId(user_id: string) {
-    const result = await Todo.find({ user_id: user_id }).exec();
+    const result = await TodoModel.find({ user_id: user_id }).exec();
     return result;
   }
 
   async updateTodo(id: string, title: string, desc: string) {
-    const result = await Todo.updateOne({ _id: id }, { title: title, description: desc }, { upsert: false }).exec();
+    const result = await TodoModel.updateOne({ _id: id }, { title: title, description: desc }, { upsert: false }).exec();
 
     if (true === result.acknowledged && 1 === result.modifiedCount) {
       return 'TODO] Update data successfully';
@@ -100,7 +128,7 @@ export default class DatabaseManager {
   }
 
   async updateStatus(id: string, status: string) {
-    const result = await Todo.updateOne({ _id: id }, { status: status }, { upsert: false }).exec();
+    const result = await TodoModel.updateOne({ _id: id }, { status: status }, { upsert: false }).exec();
 
     if (true === result.acknowledged && 1 === result.modifiedCount) {
       return 'TODO] Update status successfully';
@@ -110,7 +138,7 @@ export default class DatabaseManager {
   }
 
   async deleteTodoById(id: string) {
-    const result = await Todo.deleteOne({ _id: id }).exec();
+    const result = await TodoModel.deleteOne({ _id: id }).exec();
 
     if (true === result.acknowledged && 1 === result.deletedCount) {
       return 'TODO] Delete data successfully';
@@ -118,4 +146,5 @@ export default class DatabaseManager {
       throw new Error('TODO] Failed to delete data');
     }
   }
+  //#endregion
 }

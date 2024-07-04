@@ -10,13 +10,3 @@ export const userState: RecoilState<User> = atom<User>({
         isLogin: false
     }
 });
-
-export const emailState: RecoilState<string> = atom<string>({
-    key: 'emailState',
-    default: ''
-});
-
-export const passwordState: RecoilState<string> = atom<string>({
-    key: 'passwordState',
-    default: ''
-});

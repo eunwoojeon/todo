@@ -2,8 +2,8 @@ import mongoose, { Schema } from "mongoose";
 const { ObjectId } = Schema.Types;
 
 const userSchema = new mongoose.Schema({
-  sub: {
-    type: ObjectId,
+  sub_id: {
+    type: String,
     required: true,
     unique: true
   },
@@ -20,7 +20,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  profile_picture: {
+  picture: {
     type: String,
     required: false
   }
@@ -29,5 +29,5 @@ const userSchema = new mongoose.Schema({
   versionKey: false
 });
 
-const User = mongoose.model('User', userSchema);
-export default User;
+const UserModel = mongoose.model('User', userSchema);
+export default UserModel;
