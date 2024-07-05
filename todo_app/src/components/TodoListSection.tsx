@@ -4,6 +4,7 @@ import { editDescriptionState, editIdState, editTitleState, todoListState } from
 import { TodoItem } from '../types/components';
 import axios from 'axios';
 import { userState } from '../state/userAtoms';
+import CustomInput from './CustomInput';
 
 const TodoListSection: React.FC = () => {
   const [todoList, setTodoList] = useRecoilState(todoListState);
@@ -12,10 +13,12 @@ const TodoListSection: React.FC = () => {
   const [editDesc, setEditDesc] = useRecoilState(editDescriptionState);
   const [user, setUser] = useRecoilState(userState);
 
+  // user 변동시 todo list refresh
   useEffect(() => {
     getTodoList();
   }, [user]);
 
+  // todo list function
   const getTodoList = () => {
     axios
       .get('http://localhost:4000/todo')
@@ -29,9 +32,11 @@ const TodoListSection: React.FC = () => {
       });
   }
 
+  // todo delete function
   const deleteTodo = (e: React.SyntheticEvent<EventTarget>) => {
     if (!(e.target instanceof HTMLButtonElement)) return;
-    const todoId = e.target.dataset.id;
+    if (!(e.target.parentElement instanceof HTMLDivElement)) return;
+    const todoId = e.target.parentElement.dataset.id;
     axios
       .delete('http://localhost:4000/todo', { params: { todoId: todoId } })
       .then((res) => {
@@ -41,16 +46,11 @@ const TodoListSection: React.FC = () => {
       .catch(console.error);
   }
 
-  const editTodo = (e: React.SyntheticEvent<EventTarget>) => {
-    if (!(e.target instanceof HTMLButtonElement)) return;
-    setEditId(e.target.dataset.id as string);
-    setEditTitle(e.target.dataset.t as string);
-    setEditDesc(e.target.dataset.d as string);
-  }
-
+  // todo update function
   const updateTodo = (e: React.SyntheticEvent<EventTarget>) => {
     if (!(e.target instanceof HTMLButtonElement)) return;
-    const todoId = e.target.dataset.id;
+    if (!(e.target.parentElement instanceof HTMLDivElement)) return;
+    const todoId = e.target.parentElement.dataset.id;
     const body = {
       todoId: todoId,
       title: editTitle,
@@ -59,34 +59,46 @@ const TodoListSection: React.FC = () => {
     axios
       .post('http://localhost:4000/todo', body, { params: { write: 'update' } })
       .then((res) => {
-        // console.log(res);
         getTodoList();
         setEditId('');
       })
       .catch(console.error);
   }
 
-  useEffect(() => {
-    
-  });
+  // edit mode event
+  const editTodo = (e: React.SyntheticEvent<EventTarget>) => {
+    if (!(e.target instanceof HTMLButtonElement)) return;
+    if (!(e.target.parentElement instanceof HTMLDivElement)) return;
+    setEditId(e.target.parentElement.dataset.id as string);
+    setEditTitle(e.target.parentElement.dataset.t as string);
+    setEditDesc(e.target.parentElement.dataset.d as string);
+  }
+
+  // edit mode cancel event
+  const cancelTodo = (e: React.SyntheticEvent<EventTarget>) => {
+    if (!(e.target instanceof HTMLButtonElement)) return;
+    if (!(e.target.parentElement instanceof HTMLDivElement)) return;
+    setEditId('');
+  }
 
   return (
     <div>
       <button onClick={getTodoList}>Refresh</button>
       <div>
         {todoList.map((todoItem: TodoItem, index: number) => (
-          <div key={index} data-id={todoItem._id}>
+          <div key={index} data-id={todoItem._id} data-t={todoItem.title} data-d={todoItem.description}>
             {editId != todoItem._id ?
               <>
                 <span>{todoItem.title}</span>
                 <span>{todoItem.description}</span>
-                <button onClick={editTodo} data-id={todoItem._id} data-t={todoItem.title} data-d={todoItem.description}>U</button>
-                <button onClick={deleteTodo} data-id={todoItem._id}>X</button>
+                <button onClick={editTodo}>U</button>
+                <button onClick={deleteTodo}>X</button>
               </> :
               <>
-                <input type="text" value={editTitle} onChange={e => setEditTitle(e.target.value)} />
-                <input type="text" value={editDesc} onChange={e => setEditDesc(e.target.value)} />
-                <button onClick={updateTodo} data-id={todoItem._id}>완료</button>
+                <CustomInput text={todoItem.title} recoilState={editTitleState} />
+                <CustomInput text={todoItem.description} recoilState={editDescriptionState} />
+                <button onClick={updateTodo}>완료</button>
+                <button onClick={cancelTodo}>취소</button>
               </>
             }
           </div>

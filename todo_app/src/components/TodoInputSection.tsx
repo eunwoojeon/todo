@@ -1,5 +1,5 @@
 import { useRecoilState } from 'recoil';
-import { todoTitleState, todoDescriptionState, todoListState, editIdState } from '../state/todoAtoms';
+import { todoTitleState, todoDescriptionState, todoListState, editIdState, editTitleState, editDescriptionState } from '../state/todoAtoms';
 import axios from 'axios';
 import CustomInput from './CustomInput';
 import { useEffect } from 'react';
@@ -11,6 +11,8 @@ const TodoInputSection: React.FC = () => {
   const [todoList, setTodoList] = useRecoilState(todoListState);
   const [editId, setEditId] = useRecoilState(editIdState);
 
+
+  // todo insert function
   const addTodo = async () => {
     const body = {
       title: todoTitle,
@@ -20,7 +22,6 @@ const TodoInputSection: React.FC = () => {
     axios
       .post('http://localhost:4000/todo', body, { params: { write: 'create' } })
       .then((res) => {
-        console.log(res);
         getTodoList();
         setTodoTitle('');
         setTodoDesc('');
@@ -28,11 +29,11 @@ const TodoInputSection: React.FC = () => {
       .catch(console.error);
   }
 
+  // todo list function
   const getTodoList = async () => {
     await axios
       .get('http://localhost:4000/todo')
       .then((res) => {
-        console.log(res)
         setEditId('');
         setTodoList(res.data.todoList);
       })

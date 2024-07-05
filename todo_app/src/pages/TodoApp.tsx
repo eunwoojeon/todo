@@ -8,16 +8,16 @@ import { userState } from '../state/userAtoms';
 
 const TodoApp: React.FC = () => {
   const [user, setUser] = useRecoilState(userState);
+
+  // 새로고침시 login check
   useEffect(() => {
     checkLogin();
-    console.log(user);
   }, []);
 
   const checkLogin = async () => {
     await axios
       .get('/checksession')
       .then((res) => {
-        console.log(res);
         if (res.data.isLogin) {
           const user = {
             email: res.data.email,
@@ -25,7 +25,7 @@ const TodoApp: React.FC = () => {
             picture: res.data.picture,
             isLogin: res.data.isLogin
           };
-          setUser(user);
+          setUser(user); // login 상태 -> user 정보 set
         } else {
           const user = {
             email: '',
@@ -33,7 +33,7 @@ const TodoApp: React.FC = () => {
             picture: '',
             isLogin: false
           };
-          setUser(user);
+          setUser(user); // logout 상태 -> user 정보 초기화
         }
       })
       .catch((err) => {

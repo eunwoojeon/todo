@@ -30,7 +30,8 @@ server.use(session({
   store: mongoStore.create({
     mongoUrl: 'mongodb+srv://ewjeon:doiAwDjOHuSfDf4p@cluster0.vnq3j1u.mongodb.net/todo?retryWrites=true&w=majority&appName=Cluster0'
   }), // 세션 저장소
-  cookie: { secure: false, maxAge: (1000 * 60 * 60) * 24 } // 세션 만료 시간(24h)
+  cookie: { secure: false, maxAge: (1000 * 60 * 60) * 24 }, // ms * sec * min * hour
+  rolling: true // 모든 response가 있을 때마다 세션 만기를 재설정
 }))
 server.use((req: Request, res: Response, next: NextFunction) => { // CORS 방지
   res.header('Access-Control-Allow-Origin', 'http://localhost:5000');

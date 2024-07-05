@@ -6,6 +6,7 @@ import GoogleLoginButton from './GoogleLoginButton';
 import axios from 'axios';
 
 const NavigatorBar: React.FC = () => {
+  // Modal setting
   const [isOpen, setIsOpen] = useState(false);
   const openModal = () => setIsOpen(true);
   const closeModal = () => setIsOpen(false);
@@ -23,18 +24,19 @@ const NavigatorBar: React.FC = () => {
     }
   }
 
+  // logout function
   const [user, setUser] = useRecoilState(userState);
   const resetUser = useResetRecoilState(userState);
   const logout = async () => {
     await axios
       .get('http://localhost:4000/user/logout/google')
       .then((res) => {
-        console.log(res);
         resetUser();
       })
       .catch(console.error);
   }
 
+  // login/logout button 조건부 렌더링
   const loginButton = user.isLogin ? <button onClick={logout}>로그아웃</button> : <button onClick={openModal}>로그인</button>
 
   return (

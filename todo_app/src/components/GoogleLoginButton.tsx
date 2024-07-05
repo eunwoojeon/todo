@@ -15,6 +15,7 @@ const GoogleLoginButton: React.FC = () => {
           const body = {
             token: credentialResponse.credential
           }
+          // login function
           axios
             .post('http://localhost:4000/user/login/google', body, { withCredentials: true })
             .then((res) => {
