@@ -61,9 +61,9 @@ export default class DatabaseManager {
     const result = await UserModel.findOneAndUpdate(filter, update, option);
     if (null !== result) {
       return {
-        msg: 'USER] Save data successfully',
-        data: {
-          sub_id: result.sub_id,
+        message: 'USER] Save data successfully',
+        userData: {
+          _id: result._id.toString(),
           email: result.email,
           name: result.name,
           picture: result.picture
@@ -114,7 +114,7 @@ export default class DatabaseManager {
 
   async findAllTodoByUserId(user_id: string) {
     const result = await TodoModel.find({ user_id: user_id }).exec();
-    return result;
+    return {message: 'TODO] Find data successfully', todoList: result};
   }
 
   async updateTodo(id: string, title: string, desc: string) {

@@ -61,99 +61,136 @@ server.get("/", (req: Request, res: Response, next) => {
 
 // session
 server.get('/checksession', (req: Request, res: Response) => {
-  if (req.session && req.session.sub_id) {
-    return res.status(200).json({ isLogin: true, sub_id: req.session.sub_id, email: req.session.email, name: req.session.name, picture: req.session.picture });
+  if (req.session && req.session.userId) {
+    return res.status(200).json({ isLogin: true, email: req.session.email, name: req.session.name, picture: req.session.picture });
   }
   return res.status(200).json({ isLogin: false });
 });
 
 //#region '/user' route
 server.post('/user/login/google', async (req: Request, res: Response) => {
-  try {
-    const decodedToken = jwt.decode(req.body.token) as GoogleToken;
-    const result = await dbmanager.saveUser(decodedToken.sub, decodedToken.email, 'GOOGLE', decodedToken.name, decodedToken.picture);
+  const decodedToken = jwt.decode(req.body.token) as GoogleToken;
 
-    // session
-    req.session.email = result.data.email;
-    req.session.sub_id = result.data.sub_id;
-    req.session.name = result.data.name;
-    req.session.picture = result.data.picture;
-    console.log(req.session);
+  if (!req.session || !req.session.userId) {
+    await dbmanager
+      .saveUser(decodedToken.sub, decodedToken.email, 'GOOGLE', decodedToken.name, decodedToken.picture)
+      .then((result) => {
+        req.session.email = result.userData.email;
+        req.session.userId = result.userData._id;
+        req.session.name = result.userData.name;
+        req.session.picture = result.userData.picture;
+        console.log(req.session);
+        return result;
+      })
+      .then((result) => {
+        const { _id, ...rest } = result.userData;
+        res.status(200).json({ message: result.message, isSuccess: true, userData: rest });
+      })
+      .catch((err) => {
+        console.error(err.stack);
+        const userData = {
+          email: '', name: '', picture: ''
+        }
+        res.status(500).json({ message: err.message, isSuccess: false, userData: userData});
+      });
 
-    res.status(200).json(result);
-  } catch (err) {
-    if (err instanceof Error) {
-      console.error(err.stack);
-      res.status(500).json(err.message);
-    }
+  } else {
+    res.status(500).json({ message: 'USER] Session already exists', isSuccess: false });
   }
 })
 
 server.get('/user/logout/google', async (req: Request, res: Response) => {
-  req.session.destroy((err) => {
-    if (err) {
-      console.error('Logout error:', err);
-      return res.status(500).json({ message: 'USER] Logout failed' });
-    }
-    res.clearCookie('connect.sid');
-    console.log(req.session); // undefined!
-    return res.status(200).json({ message: 'USER] Logout success' });
-  });
+  if (req.session) {
+    req.session.destroy((err) => {
+      if (err) {
+        console.error('Logout error:', err);
+        return res.status(500).json({ message: 'USER] Logout failed', isSuccess: false });
+      }
+      res.clearCookie('connect.sid');
+      console.log(req.session); // undefined!
+      return res.status(200).json({ message: 'USER] Logout success', isSuccess: true });
+    });
+
+  } else {
+    res.status(500).json({ message: 'USER] Session already not exists', isSuccess: false });
+  }
 });
 //#endregion
 
 //#region '/todo' route
 server.route('/todo')
   .get(async (req: Request, res: Response) => {
-    console.log(req.session);
+    if (req.session && req.session.userId) {
+      await dbmanager
+        .findAllTodoByUserId(req.session.userId)
+        .then((result) => { res.status(200).json({ message: result.message, isSuccess: true, todoList: result.todoList }) })
+        .catch((err) => {
+          console.error(err.stack);
+          res.status(500).json({ message: 'TODO] Failed to find data', isSuccess: false, todoList: [] });
+        });
 
-    try {
-      const data = await dbmanager.findAllTodoByUserId(req.query.user_id as string);
-      res.status(200).json(['TODO] Find data successfully', data]);
-    } catch (err) {
-      if (err instanceof Error) {
-        console.error(err.stack);
-        res.status(500).json('TODO] Failed to find data');
-      }
+    } else {
+      res.status(500).json({ message: 'TODO] Session does not exist', isSuccess: false, todoList: [] });
     }
   })
   .post(async (req: Request, res: Response) => {
-    try {
-      if ('create' === req.query.write) {
-        const msg = await dbmanager.saveTodo(req.body.user_id, req.body.title, req.body.desc);
-        res.status(200).json(msg);
-      } else if ('update' === req.query.write) {
-        const msg = await dbmanager.updateTodo(req.body._id, req.body.title, req.body.desc);
-        res.status(200).json(msg);
-      } else {
-        res.status(500).json('TODO] Invalid parameter');
+    if (req.session && req.session.userId) {
+      switch (req.query.write) {
+        case 'create':
+          await dbmanager
+            .saveTodo(req.session.userId, req.body.title, req.body.desc)
+            .then((msg) => { res.status(200).json({ message: msg, isSuccess: true }) })
+            .catch((err) => {
+              console.error(err.stack);
+              res.status(500).json({ message: err.message, isSuccess: false });
+            });
+          break;
+
+        case 'update':
+          await dbmanager
+            .updateTodo(req.body.todoId, req.body.title, req.body.desc)
+            .then((msg) => { res.status(200).json({ message: msg, isSuccess: true }) })
+            .catch((err) => {
+              console.error(err.stack);
+              res.status(500).json({ message: err.message, isSuccess: false });
+            });
+          break;
+
+        default:
+          res.status(500).json({ message: 'TODO] Invalid parameter', isSuccess: false });
+          break;
       }
-    } catch (err) {
-      if (err instanceof Error) {
-        console.error(err.stack);
-        res.status(500).json(err.message);
-      }
+
+    } else {
+      res.status(500).json({ message: 'TODO] Session does not exist', isSuccess: false });
     }
   })
   .put(async (req: Request, res: Response) => {
-    try {
-      const msg = await dbmanager.updateStatus(req.query._id as string, req.query.status as string);
-    } catch (err) {
-      if (err instanceof Error) {
-        console.error(err.stack);
-        res.status(500).json(err.message);
-      }
+    if (req.session && req.session.userId) {
+      await dbmanager
+        .updateStatus(req.body.todoId, req.body.status)
+        .then((msg) => { res.status(200).json({ message: msg, isSuccess: true }) })
+        .catch((err) => {
+          console.error(err.stack);
+          res.status(500).json({ message: err.message, isSuccess: false });
+        });
+
+    } else {
+      res.status(500).json({ message: 'TODO] Session does not exist', isSuccess: false });
     }
   })
   .delete(async (req: Request, res: Response) => {
-    try {
-      const msg = await dbmanager.deleteTodoById(req.query._id as string);
-      res.status(200).json(msg);
-    } catch (err) {
-      if (err instanceof Error) {
-        console.error(err.stack);
-        res.status(500).json(err.message);
-      }
+    if (req.session && req.session.userId) {
+      await dbmanager
+        .deleteTodoById(req.query.todoId as string)
+        .then((msg) => { res.status(200).json({ message: msg, isSuccess: true }) })
+        .catch((err) => {
+          console.error(err.stack);
+          res.status(500).json({ message: err.message, isSuccess: false });
+        });
+
+    } else {
+      res.status(500).json({ message: 'TODO] Session does not exist', isSuccess: false });
     }
   });
 //#endregion

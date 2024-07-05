@@ -1,14 +1,12 @@
 import Modal from 'react-modal';
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRecoilState, useResetRecoilState } from "recoil";
 import { userState } from "../state/userAtoms";
 import GoogleLoginButton from './GoogleLoginButton';
 import axios from 'axios';
 
 const NavigatorBar: React.FC = () => {
-  const [user, setUser] = useRecoilState(userState);
   const [isOpen, setIsOpen] = useState(false);
-  const resetUser = useResetRecoilState(userState);
   const openModal = () => setIsOpen(true);
   const closeModal = () => setIsOpen(false);
   const customStyles = {
@@ -25,38 +23,8 @@ const NavigatorBar: React.FC = () => {
     }
   }
 
-  useEffect(() => {
-    checkLogin();
-  }, []);
-
-  const checkLogin = async () => {
-    await axios
-      .get('/checksession')
-      .then((res) => {
-        console.log(res);
-        if (res.data.isLogin) {
-          const user = {
-            email: res.data.email,
-            name: res.data.name,
-            picture: res.data.picture,
-            isLogin: res.data.isLogin
-          }
-          setUser(user);
-        } else {
-          const user = {
-            email: '',
-            name: '',
-            picture: '',
-            isLogin: false
-          }
-          setUser(user);
-        }
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  }
-
+  const [user, setUser] = useRecoilState(userState);
+  const resetUser = useResetRecoilState(userState);
   const logout = async () => {
     await axios
       .get('http://localhost:4000/user/logout/google')

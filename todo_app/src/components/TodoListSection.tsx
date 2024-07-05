@@ -1,33 +1,41 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useRecoilState } from 'recoil';
 import { editDescriptionState, editIdState, editTitleState, todoListState } from '../state/todoAtoms';
 import { TodoItem } from '../types/components';
 import axios from 'axios';
+import { userState } from '../state/userAtoms';
 
 const TodoListSection: React.FC = () => {
   const [todoList, setTodoList] = useRecoilState(todoListState);
   const [editId, setEditId] = useRecoilState(editIdState);
   const [editTitle, setEditTitle] = useRecoilState(editTitleState);
   const [editDesc, setEditDesc] = useRecoilState(editDescriptionState);
+  const [user, setUser] = useRecoilState(userState);
+
+  useEffect(() => {
+    getTodoList();
+  }, [user]);
 
   const getTodoList = () => {
     axios
-      .get('http://localhost:4000/todo', { params: { user_id: '6679a48b2804245d4d7c2d1d' } })
+      .get('http://localhost:4000/todo')
       .then((res) => {
-        console.log(res)
         setEditId('');
-        setTodoList(res.data[1]);
+        setTodoList(res.data.todoList);
       })
-      .catch(console.error);
+      .catch((err) => {
+        console.error(err);
+        setTodoList([]);
+      });
   }
 
   const deleteTodo = (e: React.SyntheticEvent<EventTarget>) => {
     if (!(e.target instanceof HTMLButtonElement)) return;
-    const _id = e.target.dataset.id;
+    const todoId = e.target.dataset.id;
     axios
-      .delete('http://localhost:4000/todo', { params: { _id: _id } })
+      .delete('http://localhost:4000/todo', { params: { todoId: todoId } })
       .then((res) => {
-        console.log(res);
+        // console.log(res);
         getTodoList();
       })
       .catch(console.error);
@@ -42,21 +50,25 @@ const TodoListSection: React.FC = () => {
 
   const updateTodo = (e: React.SyntheticEvent<EventTarget>) => {
     if (!(e.target instanceof HTMLButtonElement)) return;
-    const _id = e.target.dataset.id;
+    const todoId = e.target.dataset.id;
     const body = {
-      _id: _id,
+      todoId: todoId,
       title: editTitle,
       desc: editDesc
     }
     axios
       .post('http://localhost:4000/todo', body, { params: { write: 'update' } })
       .then((res) => {
-        console.log(res);
+        // console.log(res);
         getTodoList();
         setEditId('');
       })
       .catch(console.error);
   }
+
+  useEffect(() => {
+    
+  });
 
   return (
     <div>

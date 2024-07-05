@@ -18,9 +18,8 @@ const GoogleLoginButton: React.FC = () => {
           axios
             .post('http://localhost:4000/user/login/google', body, { withCredentials: true })
             .then((res) => {
-              console.log(res.data);
               const isLogin = true;
-              setUser({isLogin, ...res.data}); // login
+              setUser({isLogin, ...res.data.userData}); // login
             })
             .catch(console.error);
         }}
