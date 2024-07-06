@@ -24,14 +24,16 @@ const NavigatorBar: React.FC = () => {
     }
   }
 
-  // logout function
+  // logout request
   const [user, setUser] = useRecoilState(userState);
   const resetUser = useResetRecoilState(userState);
   const logout = async () => {
     await axios
       .get('http://localhost:4000/user/logout/google')
+      .then((res) => { resetUser() })
       .then((res) => {
-        resetUser();
+        localStorage.removeItem('todo-login-key');
+        window.dispatchEvent(new Event('storage'));
       })
       .catch(console.error);
   }

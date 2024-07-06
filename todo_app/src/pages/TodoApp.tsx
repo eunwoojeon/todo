@@ -9,12 +9,18 @@ import { userState } from '../state/userAtoms';
 const TodoApp: React.FC = () => {
   const [user, setUser] = useRecoilState(userState);
 
-  // 새로고침시 login check
+  // 새로고침시, 다른 탭에서 로그인 이벤트 발생시 auto login
   useEffect(() => {
-    checkLogin();
+    checkSession();
+    window.addEventListener('storage', checkSession);
+
+    return () => {
+      window.removeEventListener('storage', checkSession);
+    }
   }, []);
 
-  const checkLogin = async () => {
+  // session check request
+  const checkSession = async () => {
     await axios
       .get('/checksession')
       .then((res) => {
