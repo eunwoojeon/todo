@@ -9,7 +9,7 @@ import DatabaseManager from './db/databaseManager';
 
 // session
 import session from 'express-session';
-import mongoStore from 'connect-mongo';
+import MongoStore from 'connect-mongo';
 
 import { GoogleToken } from "./types/user";
 import './types/session';
@@ -27,18 +27,27 @@ server.use(session({
   secret: '36484381A3ACF2C7F4D841CB1A5F2', // session id 암호화 키
   resave: false, // 세션의 변화가 없어도 재저장할 것인지
   saveUninitialized: false, // 세션 저장전 uninitialized 상태로 미리 저장할 것인지
-  store: mongoStore.create({
-    mongoUrl: 'mongodb+srv://ewjeon:doiAwDjOHuSfDf4p@cluster0.vnq3j1u.mongodb.net/todo?retryWrites=true&w=majority&appName=Cluster0'
+  store: MongoStore.create({
+    mongoUrl: 'mongodb+srv://ewjeon:doiAwDjOHuSfDf4p@cluster0.vnq3j1u.mongodb.net/todo?retryWrites=true&w=majority&appName=Cluster0',
   }), // 세션 저장소
-  cookie: { secure: false, maxAge: (1000 * 60 * 60) * 24 }, // ms * sec * min * hour
+  cookie: { secure: false, maxAge: 1000 * 10}, // 10sec
+  // cookie: { secure: false, maxAge: (1000 * 60 * 60) * 24 }, // ms * sec * min * hour
   rolling: true // 모든 response가 있을 때마다 세션 만기를 재설정
 }))
-server.use((req: Request, res: Response, next: NextFunction) => { // CORS 방지
+// CORS 방지
+server.use((req: Request, res: Response, next: NextFunction) => {
   res.header('Access-Control-Allow-Origin', 'http://localhost:5000');
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
   res.header('Access-Control-Allow-Headers', 'Content-Type');
   next();
 });
+// session expiration check
+// server.use((req: Request, res: Response, next: NextFunction) => {
+//   if (!req.session) {
+//     return res.status(401).json({message: 'SESSION] Session Expired'});
+//   }
+//   next();
+// })
 
 // port 4000에서 server 실행 및 callback
 const port = 4000;

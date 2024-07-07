@@ -5,47 +5,86 @@ import { NavigatorBar } from '../components'
 import axios from 'axios';
 import { useRecoilState } from 'recoil';
 import { userState } from '../state/userAtoms';
+import { editIdState, todoListState } from '../state/todoAtoms';
 
 const TodoApp: React.FC = () => {
   const [user, setUser] = useRecoilState(userState);
+  const [todoList, setTodoList] = useRecoilState(todoListState);
+  const [editId, setEditId] = useRecoilState(editIdState);
 
-  // 새로고침시, 다른 탭에서 로그인 이벤트 발생시 auto login
+  // auto login/logout ->
   useEffect(() => {
-    checkSession();
-    window.addEventListener('storage', checkSession);
+    const handleSessionCheck = async (): Promise<void> => {
+      const sessionIsValid = await checkSessionAndFetchUser();
+      if (sessionIsValid) { // session is valid(=login)
+        await getTodoList(); // refresh todo list
+      } else { // session is invalid(=logout)
+        setTodoList([]); // initialize todo list
+      }
+    }
+    handleSessionCheck();
+    window.addEventListener('storage', handleSessionCheck);
 
     return () => {
-      window.removeEventListener('storage', checkSession);
+      window.removeEventListener('storage', handleSessionCheck);
     }
   }, []);
 
-  // session check request
-  const checkSession = async () => {
-    await axios
-      .get('/checksession')
+  // check session and fetch user request
+  const checkSessionAndFetchUser = async (): Promise<boolean> => {
+    console.trace('check session and fetch user');
+    try {
+      const res = await axios.get('/checksession');
+      if (res.data.isLogin) { // login check
+        setUser({
+          email: res.data.email,
+          name: res.data.name,
+          picture: res.data.picture,
+          isLogin: res.data.isLogin
+        });
+      } else { // logout check
+        setUser({
+          email: '',
+          name: '',
+          picture: '',
+          isLogin: false
+        });
+      }
+      return true;
+    } catch (err) {
+      console.error(err);
+      return false;
+    }
+  }
+
+  // todo list request
+  const getTodoList = () => {
+    console.trace('refresh todo list');
+    axios
+      .get('http://localhost:4000/todo')
       .then((res) => {
-        if (res.data.isLogin) {
-          const user = {
-            email: res.data.email,
-            name: res.data.name,
-            picture: res.data.picture,
-            isLogin: res.data.isLogin
-          };
-          setUser(user); // login 상태 -> user 정보 set
-        } else {
-          const user = {
-            email: '',
-            name: '',
-            picture: '',
-            isLogin: false
-          };
-          setUser(user); // logout 상태 -> user 정보 초기화
-        }
+        setEditId('');
+        setTodoList(res.data.todoList);
       })
       .catch((err) => {
         console.error(err);
+        setTodoList([]);
       });
   }
+
+  // axios.interceptors.response.use(
+  //   (res) => {
+  //     console.log(res);
+  //     return res
+  //   },
+  //   (err) => {
+  //     if (err.response && err.response.status === 401) {
+  //       console.error(err);
+  //       localStorage.removeItem('todo-login-key');
+  //       window.dispatchEvent(new Event('storage'));
+  //     }
+  //   }
+  // );
 
   return (
     <div>
@@ -57,24 +96,3 @@ const TodoApp: React.FC = () => {
 }
 
 export default TodoApp
-
-// const addTodo = (): void => {
-//   if (!todoTitle.trim()) return; // empty value check
-//   console.log(`${todoTitle.trim()}, ${todoDesc.trim()}`);
-//   saveTodoToStorage(todoTitle.trim(), todoDesc.trim());
-// }
-
-// const saveTodoToStorage = (title: String, desc: String): void => {
-//   const todoList = getTodoList();
-//   const newTodoList = todoList ? [...todoList, [title, desc]] : [[title, desc]];
-//   localStorage.setItem('todo-list', JSON.stringify(newTodoList));
-// }
-
-// const getTodoList = () => {
-//   return getTodoListFromStorage();
-// }
-
-// const getTodoListFromStorage = () => {
-//   const todoList = localStorage.getItem('todo-list') ? localStorage.getItem('todo-list') : '[]'; // null check
-//   return JSON.parse(todoList as string);
-// }

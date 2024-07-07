@@ -11,25 +11,9 @@ const TodoListSection: React.FC = () => {
   const [editId, setEditId] = useRecoilState(editIdState);
   const [editTitle, setEditTitle] = useRecoilState(editTitleState);
   const [editDesc, setEditDesc] = useRecoilState(editDescriptionState);
-  const [user, setUser] = useRecoilState(userState);
 
-  // user 변동시 todo list refresh
-  useEffect(() => {
-    getTodoList();
-  }, [user]);
-
-  // todo list function
-  const getTodoList = () => {
-    axios
-      .get('http://localhost:4000/todo')
-      .then((res) => {
-        setEditId('');
-        setTodoList(res.data.todoList);
-      })
-      .catch((err) => {
-        console.error(err);
-        setTodoList([]);
-      });
+  const todoListFetchEvent = () => {
+    window.dispatchEvent(new Event('storage'));
   }
 
   // todo delete function
@@ -40,8 +24,7 @@ const TodoListSection: React.FC = () => {
     axios
       .delete('http://localhost:4000/todo', { params: { todoId: todoId } })
       .then((res) => {
-        // console.log(res);
-        getTodoList();
+        todoListFetchEvent();
       })
       .catch(console.error);
   }
@@ -59,13 +42,12 @@ const TodoListSection: React.FC = () => {
     axios
       .post('http://localhost:4000/todo', body, { params: { write: 'update' } })
       .then((res) => {
-        getTodoList();
-        setEditId('');
+        todoListFetchEvent();
       })
       .catch(console.error);
   }
 
-  // edit mode event
+  // change to edit mode
   const editTodo = (e: React.SyntheticEvent<EventTarget>) => {
     if (!(e.target instanceof HTMLButtonElement)) return;
     if (!(e.target.parentElement instanceof HTMLDivElement)) return;
@@ -74,7 +56,7 @@ const TodoListSection: React.FC = () => {
     setEditDesc(e.target.parentElement.dataset.d as string);
   }
 
-  // edit mode cancel event
+  // return to read mode
   const cancelTodo = (e: React.SyntheticEvent<EventTarget>) => {
     if (!(e.target instanceof HTMLButtonElement)) return;
     if (!(e.target.parentElement instanceof HTMLDivElement)) return;
@@ -83,7 +65,7 @@ const TodoListSection: React.FC = () => {
 
   return (
     <div>
-      <button onClick={getTodoList}>Refresh</button>
+      <button onClick={todoListFetchEvent}>Refresh</button>
       <div>
         {todoList.map((todoItem: TodoItem, index: number) => (
           <div key={index} data-id={todoItem._id} data-t={todoItem.title} data-d={todoItem.description}>
