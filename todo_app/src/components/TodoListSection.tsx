@@ -5,18 +5,35 @@ import { TodoItem } from '../types/components';
 import axios from 'axios';
 import { userState } from '../state/userAtoms';
 import CustomInput from './CustomInput';
+import useEventListener from '../hooks/useEventListener';
+import useDispatchEvent from '../hooks/useDispatchEvent';
 
 const TodoListSection: React.FC = () => {
   const [todoList, setTodoList] = useRecoilState(todoListState);
+  const alertEvent = useDispatchEvent('alert');
   const [editId, setEditId] = useRecoilState(editIdState);
   const [editTitle, setEditTitle] = useRecoilState(editTitleState);
   const [editDesc, setEditDesc] = useRecoilState(editDescriptionState);
+  useEventListener('refresh', async () => {
+    console.trace('refresh todo list');
+    axios
+      .get('http://localhost:4000/todo')
+      .then((res) => {
+        setEditId('');
+        setTodoList(res.data.todoList);
+      })
+      .catch((err) => {
+        if (err.response.status === 401) {
+          setTodoList(err.response.data.todoList);
+          alertEvent();
+        } else {
+          console.error(err);
+        }
+      });
+  });
+  const refreshEvent = useDispatchEvent('refresh');
 
-  const todoListFetchEvent = () => {
-    window.dispatchEvent(new Event('storage'));
-  }
-
-  // todo delete function
+  // todo delete request
   const deleteTodo = (e: React.SyntheticEvent<EventTarget>) => {
     if (!(e.target instanceof HTMLButtonElement)) return;
     if (!(e.target.parentElement instanceof HTMLDivElement)) return;
@@ -24,12 +41,18 @@ const TodoListSection: React.FC = () => {
     axios
       .delete('http://localhost:4000/todo', { params: { todoId: todoId } })
       .then((res) => {
-        todoListFetchEvent();
+        refreshEvent(); // refresh list
       })
-      .catch(console.error);
+      .catch((err) => {
+        if (err.response.status === 401) {
+          alertEvent();
+        } else {
+          console.error(err);
+        }
+      });
   }
 
-  // todo update function
+  // todo update request
   const updateTodo = (e: React.SyntheticEvent<EventTarget>) => {
     if (!(e.target instanceof HTMLButtonElement)) return;
     if (!(e.target.parentElement instanceof HTMLDivElement)) return;
@@ -42,9 +65,15 @@ const TodoListSection: React.FC = () => {
     axios
       .post('http://localhost:4000/todo', body, { params: { write: 'update' } })
       .then((res) => {
-        todoListFetchEvent();
+        refreshEvent(); // refresh list
       })
-      .catch(console.error);
+      .catch((err) => {
+        if (err.response.status === 401) {
+          alertEvent();
+        } else {
+          console.error(err);
+        }
+      });
   }
 
   // change to edit mode
@@ -65,7 +94,7 @@ const TodoListSection: React.FC = () => {
 
   return (
     <div>
-      <button onClick={todoListFetchEvent}>Refresh</button>
+      <button onClick={() => { refreshEvent() }}>Refresh</button>
       <div>
         {todoList.map((todoItem: TodoItem, index: number) => (
           <div key={index} data-id={todoItem._id} data-t={todoItem.title} data-d={todoItem.description}>

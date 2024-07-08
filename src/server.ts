@@ -30,8 +30,8 @@ server.use(session({
   store: MongoStore.create({
     mongoUrl: 'mongodb+srv://ewjeon:doiAwDjOHuSfDf4p@cluster0.vnq3j1u.mongodb.net/todo?retryWrites=true&w=majority&appName=Cluster0',
   }), // 세션 저장소
-  cookie: { secure: false, maxAge: 1000 * 10}, // 10sec
-  // cookie: { secure: false, maxAge: (1000 * 60 * 60) * 24 }, // ms * sec * min * hour
+  // cookie: { secure: false, maxAge: 1000 * 10}, // 10sec
+  cookie: { secure: false, maxAge: (1000 * 60 * 60) * 24 }, // ms * sec * min * hour
   rolling: true // 모든 response가 있을 때마다 세션 만기를 재설정
 }))
 // CORS 방지
@@ -44,7 +44,7 @@ server.use((req: Request, res: Response, next: NextFunction) => {
 // session expiration check
 // server.use((req: Request, res: Response, next: NextFunction) => {
 //   if (!req.session) {
-//     return res.status(401).json({message: 'SESSION] Session Expired'});
+//     return res.status(401).json({ message: 'SESSION] Session is expired' });
 //   }
 //   next();
 // })
@@ -81,32 +81,27 @@ server.get('/checksession', (req: Request, res: Response) => {
 server.post('/user/login/google', async (req: Request, res: Response) => {
   const decodedToken = jwt.decode(req.body.token) as GoogleToken;
 
-  if (!req.session || !req.session.userId) {
-    await dbmanager
-      .saveUser(decodedToken.sub, decodedToken.email, 'GOOGLE', decodedToken.name, decodedToken.picture)
-      .then((result) => {
-        req.session.email = result.userData.email;
-        req.session.userId = result.userData._id;
-        req.session.name = result.userData.name;
-        req.session.picture = result.userData.picture;
-        console.log(req.session);
-        return result;
-      })
-      .then((result) => {
-        const { _id, ...rest } = result.userData;
-        res.status(200).json({ message: result.message, isSuccess: true, userData: rest });
-      })
-      .catch((err) => {
-        console.error(err.stack);
-        const userData = {
-          email: '', name: '', picture: ''
-        }
-        res.status(500).json({ message: err.message, isSuccess: false, userData: userData});
-      });
-
-  } else {
-    res.status(500).json({ message: 'USER] Session already exists', isSuccess: false });
-  }
+  await dbmanager
+    .saveUser(decodedToken.sub, decodedToken.email, 'GOOGLE', decodedToken.name, decodedToken.picture)
+    .then((result) => {
+      req.session.email = result.userData.email;
+      req.session.userId = result.userData._id;
+      req.session.name = result.userData.name;
+      req.session.picture = result.userData.picture;
+      console.log(req.session);
+      return result;
+    })
+    .then((result) => {
+      const { _id, ...rest } = result.userData;
+      res.status(200).json({ message: result.message, isSuccess: true, userData: rest });
+    })
+    .catch((err) => {
+      console.error(err.stack);
+      const userData = {
+        email: '', name: '', picture: ''
+      }
+      res.status(500).json({ message: err.message, isSuccess: false, userData: userData });
+    });
 })
 
 server.get('/user/logout/google', async (req: Request, res: Response) => {
@@ -122,7 +117,7 @@ server.get('/user/logout/google', async (req: Request, res: Response) => {
     });
 
   } else {
-    res.status(500).json({ message: 'USER] Session already not exists', isSuccess: false });
+    res.status(200).json({ message: 'USER] Session already not exists', isSuccess: true });
   }
 });
 //#endregion
@@ -140,7 +135,7 @@ server.route('/todo')
         });
 
     } else {
-      res.status(500).json({ message: 'TODO] Session does not exist', isSuccess: false, todoList: [] });
+      res.status(401).json({ message: 'TODO] Session does not exist', isSuccess: false, todoList: [] });
     }
   })
   .post(async (req: Request, res: Response) => {
@@ -172,7 +167,7 @@ server.route('/todo')
       }
 
     } else {
-      res.status(500).json({ message: 'TODO] Session does not exist', isSuccess: false });
+      res.status(401).json({ message: 'TODO] Session does not exist', isSuccess: false });
     }
   })
   .put(async (req: Request, res: Response) => {
@@ -186,7 +181,7 @@ server.route('/todo')
         });
 
     } else {
-      res.status(500).json({ message: 'TODO] Session does not exist', isSuccess: false });
+      res.status(401).json({ message: 'TODO] Session does not exist', isSuccess: false });
     }
   })
   .delete(async (req: Request, res: Response) => {
@@ -200,7 +195,7 @@ server.route('/todo')
         });
 
     } else {
-      res.status(500).json({ message: 'TODO] Session does not exist', isSuccess: false });
+      res.status(401).json({ message: 'TODO] Session does not exist', isSuccess: false });
     }
   });
 //#endregion

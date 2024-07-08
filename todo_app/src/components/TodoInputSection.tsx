@@ -2,25 +2,34 @@ import { useRecoilState } from 'recoil';
 import { todoTitleState, todoDescriptionState, todoListState, editIdState, editTitleState, editDescriptionState } from '../state/todoAtoms';
 import axios from 'axios';
 import CustomInput from './CustomInput';
+import useDispatchEvent from '../hooks/useDispatchEvent';
 
 // 개발 방향 : todo item 입력 및 추가 기능만 구현
 const TodoInputSection: React.FC = () => {
   const [todoTitle, setTodoTitle] = useRecoilState(todoTitleState);
   const [todoDesc, setTodoDesc] = useRecoilState(todoDescriptionState);
+  const refreshEvent = useDispatchEvent('refresh');
+  const alertEvent = useDispatchEvent('alert');
 
-  // todo insert function
+  // todo save request
   const addTodo = async () => {
     const body = {
       title: todoTitle,
       desc: todoDesc
     }
-    console.log(body);
+
     axios
       .post('http://localhost:4000/todo', body, { params: { write: 'create' } })
       .then((res) => {
-        window.dispatchEvent(new Event('storage'));
+        refreshEvent(); // refresh list
       })
-      .catch(console.error)
+      .catch((err) => {
+        if (err.response.status === 401) {
+          alertEvent();
+        } else {
+          console.error(err);
+        }
+      })
       .finally(() => {
         setTodoTitle('');
         setTodoDesc('');

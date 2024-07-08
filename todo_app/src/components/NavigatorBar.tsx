@@ -4,9 +4,10 @@ import { useRecoilState, useResetRecoilState } from "recoil";
 import { userState } from "../state/userAtoms";
 import GoogleLoginButton from './GoogleLoginButton';
 import axios from 'axios';
+import useDispatchEvent from '../hooks/useDispatchEvent';
 
 const NavigatorBar: React.FC = () => {
-  // Modal setting
+  // const refreshEvent = useDispatchEvent('refreshs');
   const [isOpen, setIsOpen] = useState(false);
   const openModal = () => setIsOpen(true);
   const closeModal = () => setIsOpen(false);
@@ -31,15 +32,17 @@ const NavigatorBar: React.FC = () => {
     await axios
       .get('http://localhost:4000/user/logout/google')
       .then((res) => { resetUser() })
-      .then((res) => {
-        localStorage.removeItem('todo-login-key');
-        window.dispatchEvent(new Event('storage'));
-      })
-      .catch(console.error);
+      // login 동기화
+      // .then(() => {
+      //   localStorage.removeItem('todo-login-key');
+      //   window.dispatchEvent(new Event('storage'));
+      // })
+      .catch(console.error)
+      .finally(() => { window.location.reload() }) // 새로고침
   }
 
   // login/logout button 조건부 렌더링
-  const loginButton = user.isLogin ? <button onClick={logout}>로그아웃</button> : <button onClick={openModal}>로그인</button>
+  const loginButton = user.isLogin ? <button onClick={logout}>Sign out</button> : <button onClick={openModal}>Sign in</button>
 
   return (
     <div>

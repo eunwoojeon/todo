@@ -1,76 +1,46 @@
 import React, { useEffect } from 'react'
 import TodoInputSection from '../components/TodoInputSection'
 import TodoListSection from '../components/TodoListSection'
-import { NavigatorBar } from '../components'
+import { AlertBanner, NavigatorBar } from '../components'
 import axios from 'axios';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useResetRecoilState } from 'recoil';
 import { userState } from '../state/userAtoms';
-import { editIdState, todoListState } from '../state/todoAtoms';
+import useDispatchEvent from '../hooks/useDispatchEvent';
+import useEventListener from '../hooks/useEventListener';
+import { todoListState } from '../state/todoAtoms';
 
 const TodoApp: React.FC = () => {
   const [user, setUser] = useRecoilState(userState);
-  const [todoList, setTodoList] = useRecoilState(todoListState);
-  const [editId, setEditId] = useRecoilState(editIdState);
-
-  // auto login/logout ->
-  useEffect(() => {
-    const handleSessionCheck = async (): Promise<void> => {
-      const sessionIsValid = await checkSessionAndFetchUser();
-      if (sessionIsValid) { // session is valid(=login)
-        await getTodoList(); // refresh todo list
-      } else { // session is invalid(=logout)
-        setTodoList([]); // initialize todo list
-      }
-    }
-    handleSessionCheck();
-    window.addEventListener('storage', handleSessionCheck);
-
-    return () => {
-      window.removeEventListener('storage', handleSessionCheck);
-    }
-  }, []);
-
-  // check session and fetch user request
-  const checkSessionAndFetchUser = async (): Promise<boolean> => {
+  const refreshEvent = useDispatchEvent('refresh');
+  const resetList = useResetRecoilState(todoListState);
+  const checkSessionAndFetchUser = async () => {
     console.trace('check session and fetch user');
-    try {
-      const res = await axios.get('/checksession');
-      if (res.data.isLogin) { // login check
-        setUser({
-          email: res.data.email,
-          name: res.data.name,
-          picture: res.data.picture,
-          isLogin: res.data.isLogin
-        });
-      } else { // logout check
-        setUser({
-          email: '',
-          name: '',
-          picture: '',
-          isLogin: false
-        });
-      }
-      return true;
-    } catch (err) {
-      console.error(err);
-      return false;
-    }
-  }
-
-  // todo list request
-  const getTodoList = () => {
-    console.trace('refresh todo list');
-    axios
-      .get('http://localhost:4000/todo')
+    await axios
+      .get('/checksession')
       .then((res) => {
-        setEditId('');
-        setTodoList(res.data.todoList);
+        if (res.data.isLogin) { // session is valid
+          setUser({
+            email: res.data.email,
+            name: res.data.name,
+            picture: res.data.picture,
+            isLogin: res.data.isLogin
+          });
+          refreshEvent();
+        } else { // session is invalid
+          setUser({
+            email: '',
+            name: '',
+            picture: '',
+            isLogin: false
+          });
+          resetList();
+        }
       })
-      .catch((err) => {
-        console.error(err);
-        setTodoList([]);
-      });
+      .catch(console.error);
   }
+  useEventListener('sign-in-out', checkSessionAndFetchUser);
+  // login 동기화
+  // useEventListener('storage', checkSessionAndFetchUser, checkSessionAndFetchUser);
 
   // axios.interceptors.response.use(
   //   (res) => {
@@ -88,6 +58,7 @@ const TodoApp: React.FC = () => {
 
   return (
     <div>
+      <AlertBanner />
       <NavigatorBar />
       <TodoInputSection />
       <TodoListSection />

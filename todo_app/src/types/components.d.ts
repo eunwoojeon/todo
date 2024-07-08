@@ -1,10 +1,10 @@
 import { RecoilState } from "recoil";
 
-export type TodoInputSectionProps = {
+export interface TodoInputSectionProps {
     addTodo: React.MouseEventHandler<HTMLButtonElement>;
 }
 
-export type TodoListSectionProps = {
+export interface TodoListSectionProps {
     user_id: string;
 }
 
@@ -29,3 +29,8 @@ export interface CustomInputProps {
     text: string;
     recoilState: RecoilState<string>;
 };
+
+export interface Alert {
+    alertIsActive: boolean;
+    alertText: string;
+}
