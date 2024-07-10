@@ -1,15 +1,19 @@
-import { useRecoilState } from 'recoil';
-import { todoTitleState, todoDescriptionState, todoListState, editIdState, editTitleState, editDescriptionState } from '../state/todoAtoms';
 import axios from 'axios';
-import CustomInput from './CustomInput';
+import { useRecoilState } from 'recoil';
 import useDispatchEvent from '../hooks/useDispatchEvent';
+import { todoDescriptionState, todoTitleState } from '../state/todoAtoms';
+import { Alert } from '../types/components';
+import CustomInput from './CustomInput';
+import styles from './TodoInputSection.module.css';
 
-// 개발 방향 : todo item 입력 및 추가 기능만 구현
 const TodoInputSection: React.FC = () => {
   const [todoTitle, setTodoTitle] = useRecoilState(todoTitleState);
   const [todoDesc, setTodoDesc] = useRecoilState(todoDescriptionState);
   const refreshEvent = useDispatchEvent('refresh');
-  const alertEvent = useDispatchEvent('alert');
+  const alertEvent = useDispatchEvent<Alert>('alert', {
+    alertIsActive: true,
+    alertText: 'You signed out in another tab or your session has expired. Please log in again.'
+  });
 
   // todo save request
   const addTodo = async () => {
@@ -37,7 +41,7 @@ const TodoInputSection: React.FC = () => {
   }
 
   return (
-    <div>
+    <div className={styles.inputSec}>
       <CustomInput text={'제목'} recoilState={todoTitleState} />
       <CustomInput text={'할일'} recoilState={todoDescriptionState} />
       <button className='addBtn' onClick={addTodo}>+</button>

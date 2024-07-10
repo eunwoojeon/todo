@@ -63,6 +63,7 @@ export default class DatabaseManager {
       return {
         message: 'USER] Save data successfully',
         userData: {
+          isLogin: true,
           _id: result._id.toString(),
           email: result.email,
           name: result.name,

@@ -1,13 +1,12 @@
-import React, { useEffect } from 'react'
-import TodoInputSection from '../components/TodoInputSection'
-import TodoListSection from '../components/TodoListSection'
-import { AlertBanner, NavigatorBar } from '../components'
 import axios from 'axios';
+import React from 'react';
 import { useRecoilState, useResetRecoilState } from 'recoil';
-import { userState } from '../state/userAtoms';
+import { AlertBanner, NavigatorBar, TodoInputSection, TodoListSection } from '../components';
 import useDispatchEvent from '../hooks/useDispatchEvent';
 import useEventListener from '../hooks/useEventListener';
 import { todoListState } from '../state/todoAtoms';
+import { userState } from '../state/userAtoms';
+import styles from './TodoApp.module.css';
 
 const TodoApp: React.FC = () => {
   const [user, setUser] = useRecoilState(userState);
@@ -16,7 +15,7 @@ const TodoApp: React.FC = () => {
   const checkSessionAndFetchUser = async () => {
     console.trace('check session and fetch user');
     await axios
-      .get('/checksession')
+      .get('http://localhost:4000/checksession')
       .then((res) => {
         if (res.data.isLogin) { // session is valid
           setUser({
@@ -38,7 +37,7 @@ const TodoApp: React.FC = () => {
       })
       .catch(console.error);
   }
-  useEventListener('sign-in-out', checkSessionAndFetchUser);
+  useEventListener('sign-in-out', checkSessionAndFetchUser, checkSessionAndFetchUser);
   // login 동기화
   // useEventListener('storage', checkSessionAndFetchUser, checkSessionAndFetchUser);
 
@@ -57,7 +56,7 @@ const TodoApp: React.FC = () => {
   // );
 
   return (
-    <div>
+    <div className={styles.todoApp}>
       <AlertBanner />
       <NavigatorBar />
       <TodoInputSection />

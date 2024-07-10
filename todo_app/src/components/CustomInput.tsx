@@ -1,6 +1,7 @@
-import React, { useState } from 'react'
-import { RecoilState, SetterOrUpdater, useRecoilState } from 'recoil';
+import React from 'react';
+import { RecoilState, useRecoilState } from 'recoil';
 import { CustomInputProps } from '../types/components';
+import styles from './CustomInput.module.css';
 
 const useInput = (recoilState: RecoilState<string>) => {
   const [value, setValue] = useRecoilState(recoilState);
@@ -8,14 +9,14 @@ const useInput = (recoilState: RecoilState<string>) => {
     setValue(e.target.value);
   }
 
-  return {value, onChange};
+  return { value, onChange };
 }
 
 const CustomInput: React.FC<CustomInputProps> = ({ text, recoilState }) => {
   const value = useInput(recoilState);
 
   return (
-    <div>
+    <div className={styles.customInput}>
       <span>{text}</span>
       <input type="text" {...value} />
     </div>

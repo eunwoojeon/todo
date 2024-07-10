@@ -1,16 +1,18 @@
-import React, { useEffect } from 'react'
-import { useRecoilState } from 'recoil';
-import { editDescriptionState, editIdState, editTitleState, todoListState } from '../state/todoAtoms';
-import { TodoItem } from '../types/components';
 import axios from 'axios';
-import { userState } from '../state/userAtoms';
-import CustomInput from './CustomInput';
-import useEventListener from '../hooks/useEventListener';
+import React from 'react';
+import { useRecoilState } from 'recoil';
 import useDispatchEvent from '../hooks/useDispatchEvent';
+import useEventListener from '../hooks/useEventListener';
+import { editDescriptionState, editIdState, editTitleState, todoListState } from '../state/todoAtoms';
+import { Alert, TodoItem } from '../types/components';
+import CustomInput from './CustomInput';
 
 const TodoListSection: React.FC = () => {
   const [todoList, setTodoList] = useRecoilState(todoListState);
-  const alertEvent = useDispatchEvent('alert');
+  const alertEvent = useDispatchEvent<Alert>('alert', {
+    alertIsActive: true,
+    alertText: 'You signed out in another tab or your session has expired. Please log in again.'
+  });
   const [editId, setEditId] = useRecoilState(editIdState);
   const [editTitle, setEditTitle] = useRecoilState(editTitleState);
   const [editDesc, setEditDesc] = useRecoilState(editDescriptionState);

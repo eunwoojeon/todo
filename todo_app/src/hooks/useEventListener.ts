@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-const useEventListener = (type: string, callback: EventListenerOrEventListenerObject, immediateExc: Function | undefined = undefined): void => {
+const useEventListener = (type: string, callback: EventListener, immediateExc: Function | undefined = undefined): void => {
   useEffect(() => {
     window.addEventListener(type, callback); // mount
     if (typeof immediateExc === 'function') {

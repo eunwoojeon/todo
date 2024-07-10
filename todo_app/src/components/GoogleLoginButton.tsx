@@ -1,9 +1,9 @@
-import React, { useEffect } from 'react'
-import { useGoogleLogin, GoogleLogin, CredentialResponse } from "@react-oauth/google"
+import { GoogleLogin } from "@react-oauth/google";
 import axios from 'axios';
+import React from 'react';
 import { useRecoilState } from 'recoil';
-import { userState } from '../state/userAtoms';
 import useDispatchEvent from '../hooks/useDispatchEvent';
+import { userState } from '../state/userAtoms';
 
 const GoogleLoginButton: React.FC = () => {
   const [user, setUser] = useRecoilState(userState);
@@ -13,7 +13,7 @@ const GoogleLoginButton: React.FC = () => {
     const body = { token: token };
     axios
       .post('http://localhost:4000/user/login/google', body, { withCredentials: true })
-      .then((res) => { setUser({ isLogin: true, ...res.data.userData }) })
+      .then((res) => { setUser({ ...res.data.userData }) })
       .then((res) => { 
         checkSessionEvent();
       })

@@ -1,18 +1,20 @@
-import React from 'react'
-import { alertState } from '../state/common';
+import React from 'react';
 import { useRecoilState } from 'recoil';
 import useEventListener from '../hooks/useEventListener';
-import useDispatchEvent from '../hooks/useDispatchEvent';
+import { alertState } from '../state/common';
+import { Alert } from '../types/components';
+import styles from './AlertBanner.module.css';
 
 const AlertBanner: React.FC = () => {
   const [alert, setAlert] = useRecoilState(alertState);
-  const alertEvent = useDispatchEvent('alert');
-  useEventListener('alert', () => {
+  useEventListener('alert', (e) => {
     console.trace('alert!');
+    const event = e as CustomEvent<Alert>;
     setAlert({
-      alertIsActive: true,
-      alertText: "Test!!!!!"
+      alertIsActive: event.detail.alertIsActive,
+      alertText: event.detail.alertText
     });
+    window.location.reload();
   });
 
   const closeAlert = () => {
@@ -25,7 +27,7 @@ const AlertBanner: React.FC = () => {
   return (
     <>
       {alert.alertIsActive ?
-        <div>
+        <div className={styles.banner}>
           <span>{alert.alertText}</span>
           <button onClick={closeAlert}>x</button>
         </div>

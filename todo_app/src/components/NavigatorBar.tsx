@@ -1,13 +1,12 @@
-import Modal from 'react-modal';
+import axios from 'axios';
 import { useState } from "react";
+import Modal from 'react-modal';
 import { useRecoilState, useResetRecoilState } from "recoil";
 import { userState } from "../state/userAtoms";
 import GoogleLoginButton from './GoogleLoginButton';
-import axios from 'axios';
-import useDispatchEvent from '../hooks/useDispatchEvent';
+import styles from './NavigatorBar.module.css';
 
 const NavigatorBar: React.FC = () => {
-  // const refreshEvent = useDispatchEvent('refreshs');
   const [isOpen, setIsOpen] = useState(false);
   const openModal = () => setIsOpen(true);
   const closeModal = () => setIsOpen(false);
@@ -45,8 +44,7 @@ const NavigatorBar: React.FC = () => {
   const loginButton = user.isLogin ? <button onClick={logout}>Sign out</button> : <button onClick={openModal}>Sign in</button>
 
   return (
-    <div>
-      NavigatorBar
+    <div className={styles.navBar}>
       {loginButton}
       <Modal
         isOpen={isOpen}

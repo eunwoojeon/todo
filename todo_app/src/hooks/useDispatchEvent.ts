@@ -1,6 +1,7 @@
-const useDispatchEvent = (type: string): Function => {
+const useDispatchEvent = <T>(type: string, detail: T | undefined = undefined): Function => {
   const todoListFetchEvent = () => {
-    window.dispatchEvent(new Event(type));
+    const customEvent = new CustomEvent(type, { detail: detail });
+    window.dispatchEvent(customEvent);
   }
 
   return todoListFetchEvent;

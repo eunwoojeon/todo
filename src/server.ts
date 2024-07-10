@@ -39,9 +39,10 @@ server.use((req: Request, res: Response, next: NextFunction) => {
   res.header('Access-Control-Allow-Origin', 'http://localhost:5000');
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
   res.header('Access-Control-Allow-Headers', 'Content-Type');
+  res.header('Access-Control-Allow-Credentials', 'true');
   next();
 });
-// session expiration check
+// session expiration check (session 만료 알림용)
 // server.use((req: Request, res: Response, next: NextFunction) => {
 //   if (!req.session) {
 //     return res.status(401).json({ message: 'SESSION] Session is expired' });

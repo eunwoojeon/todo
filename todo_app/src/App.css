@@ -8,6 +8,7 @@
 
 * {
   font-family: "Oleo Script", "Noto Sans KR";
+  box-sizing: border-box;
 }
 
 .input-font {
