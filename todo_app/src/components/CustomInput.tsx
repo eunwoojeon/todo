@@ -2,15 +2,7 @@ import React from 'react';
 import { RecoilState, useRecoilState } from 'recoil';
 import { CustomInputProps } from '../types/components';
 import styles from './CustomInput.module.css';
-
-const useInput = (recoilState: RecoilState<string>) => {
-  const [value, setValue] = useRecoilState(recoilState);
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setValue(e.target.value);
-  }
-
-  return { value, onChange };
-}
+import useInput from '../hooks/useInput';
 
 const CustomInput: React.FC<CustomInputProps> = ({ text, recoilState }) => {
   const value = useInput(recoilState);
