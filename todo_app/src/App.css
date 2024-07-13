@@ -14,3 +14,37 @@
 .input-font {
   font-family: "Noto Sans KR";
 }
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg-color: #FFFFFF;
+    --text-color: #1F2933;
+
+    --input-bg-color: #E4E7EB;
+    --input-text-color: #323F4B;
+
+    --nav-bg-color: #FFFFFF;
+    --nav-text-color: #1F2933;
+    --nav-icon-color: #616E7C;
+    
+    --todo-item-bg-color: #E4E7EB;
+    --todo-item-border-color: #CBD2D9;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-color: #1F2933;
+    --text-color: #FFFFFF;
+
+    --input-bg-color: #3E4C59;
+    --input-text-color: #D9E2EC;
+
+    --nav-bg-color: #1F2933;
+    --nav-text-color: #FFFFFF;
+    --nav-icon-color: #9AA5B1;
+
+    --todo-item-bg-color: #3E4C59;
+    --todo-item-border-color: #52606D;
+  }
+}
