@@ -32,6 +32,12 @@
   font-family: Roboto;
 }
 
+button {
+  border: 0;
+  cursor: pointer;
+  background-color: transparent;
+}
+
 @media screen and (max-width: 768px) {
   :root {
     --title-margin: 50px;
@@ -69,6 +75,7 @@
     --placeholder-text-color: #0E1011;
     
     --input-bg-color: #C4E6F3;
+    --input-bg-color-hover: #CEF2FF;
     --list-bg-color: #E7ECEF;
 
     --login-bg-color: #AE2C00;
@@ -83,6 +90,7 @@
     --placeholder-text-color: #afafaf;
     
     --input-bg-color: #0C2D3A;
+    --input-bg-color-hover: #155066;
     --list-bg-color: #101618;
     
     --login-bg-color: #AE2C00;
