@@ -1,0 +1,9 @@
+.input-sec {
+  width: var(--main-width);
+  margin: var(--input-margin) 0 var(--input-margin) 0;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}

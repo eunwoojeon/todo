@@ -4,7 +4,7 @@ import useDispatchEvent from '../hooks/useDispatchEvent';
 import { todoDescriptionState, todoTitleState } from '../state/todoAtoms';
 import { Alert } from '../types/components';
 import CustomInput from './CustomInput';
-import styles from './TodoInputSection.module.css';
+import './TodoInputSection.css';
 
 const TodoInputSection: React.FC = () => {
   const [todoTitle, setTodoTitle] = useRecoilState(todoTitleState);
@@ -23,7 +23,7 @@ const TodoInputSection: React.FC = () => {
     }
 
     axios
-      .post('http://localhost:4000/todo', body, { params: { write: 'create' } })
+      .post('http://localhost:4000/todo', body, { params: { write: 'create' }, withCredentials: true })
       .then((res) => {
         refreshEvent(); // refresh list
       })
@@ -41,7 +41,7 @@ const TodoInputSection: React.FC = () => {
   }
 
   return (
-    <div className={styles.inputSec}>
+    <div className='input-sec'>
       <CustomInput text={'제목'} recoilState={todoTitleState} />
       <CustomInput text={'할일'} recoilState={todoDescriptionState} />
       <button className='addBtn' onClick={addTodo}>+</button>

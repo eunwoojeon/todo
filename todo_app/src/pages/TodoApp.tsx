@@ -6,7 +6,7 @@ import useDispatchEvent from '../hooks/useDispatchEvent';
 import useEventListener from '../hooks/useEventListener';
 import { todoListState } from '../state/todoAtoms';
 import { userState } from '../state/userAtoms';
-import styles from './TodoApp.module.css';
+import './TodoApp.css';
 
 const TodoApp: React.FC = () => {
   const [user, setUser] = useRecoilState(userState);
@@ -15,7 +15,7 @@ const TodoApp: React.FC = () => {
   const checkSessionAndFetchUser = async () => {
     console.trace('check session and fetch user');
     await axios
-      .get('http://localhost:4000/checksession')
+      .get('http://localhost:4000/checksession', {withCredentials: true})
       .then((res) => {
         if (res.data.isLogin) { // session is valid
           setUser({
@@ -56,11 +56,14 @@ const TodoApp: React.FC = () => {
   // );
 
   return (
-    <div className={styles.todoApp}>
+    <div className='todoApp'>
       <AlertBanner />
       <NavigatorBar />
-      <TodoInputSection />
-      <TodoListSection />
+      <div className='title title-font'>To-Do List</div>
+      <div className='main'>
+        <TodoInputSection />
+        <TodoListSection />
+      </div>
     </div>
   )
 }

@@ -6,6 +6,7 @@ import useEventListener from '../hooks/useEventListener';
 import { editDescriptionState, editIdState, editTitleState, todoListState } from '../state/todoAtoms';
 import { Alert, TodoItem } from '../types/components';
 import CustomInput from './CustomInput';
+import './TodoListSection.css'
 
 const TodoListSection: React.FC = () => {
   const [todoList, setTodoList] = useRecoilState(todoListState);
@@ -19,7 +20,7 @@ const TodoListSection: React.FC = () => {
   useEventListener('refresh', async () => {
     console.trace('refresh todo list');
     axios
-      .get('http://localhost:4000/todo')
+      .get('http://localhost:4000/todo', { withCredentials: true })
       .then((res) => {
         setEditId('');
         setTodoList(res.data.todoList);
@@ -41,7 +42,7 @@ const TodoListSection: React.FC = () => {
     if (!(e.target.parentElement instanceof HTMLDivElement)) return;
     const todoId = e.target.parentElement.dataset.id;
     axios
-      .delete('http://localhost:4000/todo', { params: { todoId: todoId } })
+      .delete('http://localhost:4000/todo', { params: { todoId: todoId }, withCredentials: true })
       .then((res) => {
         refreshEvent(); // refresh list
       })
@@ -65,7 +66,7 @@ const TodoListSection: React.FC = () => {
       desc: editDesc
     }
     axios
-      .post('http://localhost:4000/todo', body, { params: { write: 'update' } })
+      .post('http://localhost:4000/todo', body, { params: { write: 'update' }, withCredentials: true })
       .then((res) => {
         refreshEvent(); // refresh list
       })
@@ -95,23 +96,31 @@ const TodoListSection: React.FC = () => {
   }
 
   return (
-    <div>
+    <div className='list-sec'>
       <button onClick={() => { refreshEvent() }}>Refresh</button>
       <div>
         {todoList.map((todoItem: TodoItem, index: number) => (
-          <div key={index} data-id={todoItem._id} data-t={todoItem.title} data-d={todoItem.description}>
+          <div className='item'>
             {editId != todoItem._id ?
               <>
-                <span>{todoItem.title}</span>
-                <span>{todoItem.description}</span>
-                <button onClick={editTodo}>U</button>
-                <button onClick={deleteTodo}>X</button>
+                <div className='read'>
+                  <span>{todoItem.title}</span>
+                  <span>{todoItem.description}</span>
+                </div>
+                <div key={index} data-id={todoItem._id} data-t={todoItem.title} data-d={todoItem.description}>
+                  <button onClick={editTodo}>U</button>
+                  <button onClick={deleteTodo}>X</button>
+                </div>
               </> :
               <>
-                <CustomInput text={todoItem.title} recoilState={editTitleState} />
-                <CustomInput text={todoItem.description} recoilState={editDescriptionState} />
-                <button onClick={updateTodo}>완료</button>
-                <button onClick={cancelTodo}>취소</button>
+                <div className='edit'>
+                  <CustomInput text={todoItem.title} recoilState={editTitleState} />
+                  <CustomInput text={todoItem.description} recoilState={editDescriptionState} />
+                </div>
+                <div key={index} data-id={todoItem._id} data-t={todoItem.title} data-d={todoItem.description}>
+                  <button onClick={updateTodo}>완료</button>
+                  <button onClick={cancelTodo}>취소</button>
+                </div>
               </>
             }
           </div>

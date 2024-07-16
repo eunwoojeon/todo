@@ -1,0 +1,22 @@
+.custom-input {
+  padding: 1rem;
+
+  border-radius: 20px;
+  background-color: var(--input-bg-color);
+}
+
+.custom-input>input {
+  border: none;
+  outline: none;
+  
+  width: var(--input-width);
+  height: 3rem;
+  
+  border-radius: 20px;
+  background-color: transparent;
+  color: var(--text-color);
+}
+
+.custom-input>input::placeholder {
+  color: var(--placeholder-text-color);
+}

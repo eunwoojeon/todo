@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Oleo+Script:wght@400;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap');
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css");
 
 #root {
   width: 100vw;
@@ -7,44 +8,67 @@
 }
 
 * {
-  font-family: "Oleo Script", "Noto Sans KR";
+  /*opera*/
   box-sizing: border-box;
+  /*firefox*/
+  -moz-box-sizing: border-box;
+  /*webkit chrome*/
+  -webkit-box-sizing: border-box;
+  font-family: Noto Sans KR, Pretendard, sans-serif;
 }
 
-.input-font {
-  font-family: "Noto Sans KR";
+.title-font {
+  font-family: Oleo Script;
+}
+
+@media screen and (max-width: 768px) {
+  :root {
+    --title-margin: 50px;
+    --input-margin: 50px;
+    --list-margin: 20px;
+    --main-width: 500px;
+    --input-width: 150px;
+  }
+}
+
+@media screen and (min-width: 769px) and (max-width: 1024px) {
+  :root {
+    --title-margin: 50px;
+    --input-margin: 50px;
+    --list-margin: 20px;
+    --main-width: 600px;
+    --input-width: 200px;
+  }
+}
+
+@media screen and (min-width: 1025px) {
+  :root {
+    --title-margin: 50px;
+    --input-margin: 50px;
+    --list-margin: 20px;
+    --main-width: 800px;
+    --input-width:280px;
+  }
 }
 
 @media (prefers-color-scheme: light) {
   :root {
-    --bg-color: #FFFFFF;
-    --text-color: #1F2933;
-
-    --input-bg-color: #E4E7EB;
-    --input-text-color: #323F4B;
-
-    --nav-bg-color: #FFFFFF;
-    --nav-text-color: #1F2933;
-    --nav-icon-color: #616E7C;
+    --bg-color: #EEF4F7;
+    --text-color: #0E1011;
+    --placeholder-text-color: #0E1011;
     
-    --todo-item-bg-color: #E4E7EB;
-    --todo-item-border-color: #CBD2D9;
+    --input-bg-color: #C4E6F3;
+    --list-bg-color: #E7ECEF;
   }
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg-color: #1F2933;
-    --text-color: #FFFFFF;
-
-    --input-bg-color: #3E4C59;
-    --input-text-color: #D9E2EC;
-
-    --nav-bg-color: #1F2933;
-    --nav-text-color: #FFFFFF;
-    --nav-icon-color: #9AA5B1;
-
-    --todo-item-bg-color: #3E4C59;
-    --todo-item-border-color: #52606D;
+    --bg-color: #080E11;
+    --text-color: #EEF0F1;
+    --placeholder-text-color: #afafaf;
+    
+    --input-bg-color: #0C2D3A;
+    --list-bg-color: #101618;
   }
 }
