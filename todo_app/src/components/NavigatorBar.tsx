@@ -5,6 +5,8 @@ import { useRecoilState, useResetRecoilState } from "recoil";
 import { userState } from "../state/userAtoms";
 import GoogleLoginButton from './GoogleLoginButton';
 import './NavigatorBar.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faMoon, faSun } from '@fortawesome/free-solid-svg-icons';
 
 const NavigatorBar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -30,7 +32,7 @@ const NavigatorBar: React.FC = () => {
   const logout = async () => {
     await axios
       .get('http://localhost:4000/user/logout/google', { withCredentials: true })
-      .then((res) => { 
+      .then((res) => {
         resetUser();
         setIsOpen(false);
       })
@@ -58,7 +60,7 @@ const NavigatorBar: React.FC = () => {
 
   return (
     <div className='navBar'>
-      <button className='nav-btn'>{isDarkMode ? 'Light Mode' : 'Dark Mode'}</button>
+      {isDarkMode ? <FontAwesomeIcon icon={faSun} style={{ color: 'var(--fontawesome)' }} /> : <FontAwesomeIcon icon={faMoon} style={{ color: 'var(--fontawesome)' }} />}
       {user.isLogin ?
         <>
           <button className='nav-btn login-btn eng-font' onClick={openModal}>Log Out</button>
@@ -81,7 +83,7 @@ const NavigatorBar: React.FC = () => {
             ariaHideApp={false}>
             <h1>Log In</h1>
             <button onClick={closeModal}>닫기</button>
-            <GoogleLoginButton closeModal={() => {setIsOpen(false)}}/>
+            <GoogleLoginButton closeModal={() => { setIsOpen(false) }} />
             <button>Login as Guest</button>
           </Modal>
         </>}

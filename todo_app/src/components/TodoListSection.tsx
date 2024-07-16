@@ -7,6 +7,10 @@ import { editDescriptionState, editIdState, editTitleState, todoListState } from
 import { Alert, TodoItem } from '../types/components';
 import CustomInput from './CustomInput';
 import './TodoListSection.css'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowsRotate, faCircleCheck, faXmark } from '@fortawesome/free-solid-svg-icons';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faPenToSquare } from '@fortawesome/free-solid-svg-icons';
 
 const TodoListSection: React.FC = () => {
   const [todoList, setTodoList] = useRecoilState(todoListState);
@@ -38,9 +42,9 @@ const TodoListSection: React.FC = () => {
 
   // todo delete request
   const deleteTodo = (e: React.SyntheticEvent<EventTarget>) => {
-    if (!(e.target instanceof HTMLButtonElement)) return;
-    if (!(e.target.parentElement instanceof HTMLDivElement)) return;
-    const todoId = e.target.parentElement.dataset.id;
+    if (!(e.currentTarget instanceof HTMLButtonElement)) return;
+    if (!(e.currentTarget.parentElement instanceof HTMLDivElement)) return;
+    const todoId = e.currentTarget.parentElement.dataset.id;
     axios
       .delete('http://localhost:4000/todo', { params: { todoId: todoId }, withCredentials: true })
       .then((res) => {
@@ -57,9 +61,9 @@ const TodoListSection: React.FC = () => {
 
   // todo update request
   const updateTodo = (e: React.SyntheticEvent<EventTarget>) => {
-    if (!(e.target instanceof HTMLButtonElement)) return;
-    if (!(e.target.parentElement instanceof HTMLDivElement)) return;
-    const todoId = e.target.parentElement.dataset.id;
+    if (!(e.currentTarget instanceof HTMLButtonElement)) return;
+    if (!(e.currentTarget.parentElement instanceof HTMLDivElement)) return;
+    const todoId = e.currentTarget.parentElement.dataset.id;
     const body = {
       todoId: todoId,
       title: editTitle,
@@ -81,26 +85,26 @@ const TodoListSection: React.FC = () => {
 
   // change to edit mode
   const editTodo = (e: React.SyntheticEvent<EventTarget>) => {
-    if (!(e.target instanceof HTMLButtonElement)) return;
-    if (!(e.target.parentElement instanceof HTMLDivElement)) return;
-    setEditId(e.target.parentElement.dataset.id as string);
-    setEditTitle(e.target.parentElement.dataset.t as string);
-    setEditDesc(e.target.parentElement.dataset.d as string);
+    if (!(e.currentTarget instanceof HTMLButtonElement)) return;
+    if (!(e.currentTarget.parentElement instanceof HTMLDivElement)) return;
+    setEditId(e.currentTarget.parentElement.dataset.id as string);
+    setEditTitle(e.currentTarget.parentElement.dataset.t as string);
+    setEditDesc(e.currentTarget.parentElement.dataset.d as string);
   }
 
   // return to read mode
   const cancelTodo = (e: React.SyntheticEvent<EventTarget>) => {
-    if (!(e.target instanceof HTMLButtonElement)) return;
-    if (!(e.target.parentElement instanceof HTMLDivElement)) return;
+    if (!(e.currentTarget instanceof HTMLButtonElement)) return;
+    if (!(e.currentTarget.parentElement instanceof HTMLDivElement)) return;
     setEditId('');
   }
 
   return (
     <div className='list-sec'>
-      <button onClick={() => { refreshEvent() }}>Refresh</button>
+      <FontAwesomeIcon className='refresh-btn' icon={faArrowsRotate} onClick={() => { refreshEvent() }} style={{ color: 'var(--fontawesome)' }} />
       <div>
         {todoList.map((todoItem: TodoItem, index: number) => (
-          <div className='item'>
+          <div className='item' key={index}>
             {editId != todoItem._id ?
               <>
                 <div className='read'>
@@ -108,8 +112,12 @@ const TodoListSection: React.FC = () => {
                   <span>{todoItem.description}</span>
                 </div>
                 <div key={index} data-id={todoItem._id} data-t={todoItem.title} data-d={todoItem.description}>
-                  <button onClick={editTodo}>U</button>
-                  <button onClick={deleteTodo}>X</button>
+                  <button onClick={editTodo}>
+                    <FontAwesomeIcon icon={faPenToSquare} style={{ color: 'var(--fontawesome)' }} />
+                  </button>
+                  <button onClick={deleteTodo}>
+                    <FontAwesomeIcon icon={faTrash} style={{ color: 'var(--fontawesome)' }} />
+                  </button>
                 </div>
               </> :
               <>
@@ -118,8 +126,12 @@ const TodoListSection: React.FC = () => {
                   <CustomInput text={todoItem.description} recoilState={editDescriptionState} />
                 </div>
                 <div key={index} data-id={todoItem._id} data-t={todoItem.title} data-d={todoItem.description}>
-                  <button onClick={updateTodo}>완료</button>
-                  <button onClick={cancelTodo}>취소</button>
+                  <button onClick={updateTodo}>
+                    <FontAwesomeIcon icon={faCircleCheck} style={{ color: 'var(--fontawesome)' }} />
+                  </button>
+                  <button onClick={cancelTodo}>
+                    <FontAwesomeIcon icon={faXmark} style={{ color: 'var(--fontawesome)' }} />
+                  </button>
                 </div>
               </>
             }

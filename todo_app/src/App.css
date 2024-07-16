@@ -80,6 +80,8 @@ button {
 
     --login-bg-color: #AE2C00;
     --add-bg-color: #CDE5EE;
+
+    --fontawesome: #0E1011;
   }
 }
 
@@ -95,5 +97,7 @@ button {
     
     --login-bg-color: #AE2C00;
     --add-bg-color: #112A32;
+
+    --fontawesome: #EEF0F1;
   }
 }
