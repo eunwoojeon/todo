@@ -29,8 +29,11 @@ const NavigatorBar: React.FC = () => {
   const resetUser = useResetRecoilState(userState);
   const logout = async () => {
     await axios
-      .get('http://localhost:4000/user/logout/google', {withCredentials: true})
-      .then((res) => { resetUser() })
+      .get('http://localhost:4000/user/logout/google', { withCredentials: true })
+      .then((res) => { 
+        resetUser();
+        setIsOpen(false);
+      })
       // login 동기화
       // .then(() => {
       //   localStorage.removeItem('todo-login-key');
@@ -39,8 +42,6 @@ const NavigatorBar: React.FC = () => {
       .catch(console.error)
       .finally(() => { window.location.reload() }) // 새로고침
   }
-  // login/logout button 조건부 렌더링
-  const loginButton = user.isLogin ? <button onClick={logout}>Sign out</button> : <button onClick={openModal}>Sign in</button>
 
   const [isDarkMode, setIsDarkMode] = useState(false);
   useEffect(() => {
@@ -57,18 +58,33 @@ const NavigatorBar: React.FC = () => {
 
   return (
     <div className='navBar'>
-      <button>{isDarkMode? 'Light Mode':'Dark Mode'}</button>
-      {loginButton}
-      <Modal
-        isOpen={isOpen}
-        onRequestClose={closeModal}
-        style={customStyles}
-        ariaHideApp={false}>
-        <h1>Log In</h1>
-        <button onClick={closeModal}>닫기</button>
-        <GoogleLoginButton />
-        <button>Login as Guest</button>
-      </Modal>
+      <button className='nav-btn'>{isDarkMode ? 'Light Mode' : 'Dark Mode'}</button>
+      {user.isLogin ?
+        <>
+          <button className='nav-btn login-btn eng-font' onClick={openModal}>Log Out</button>
+          <Modal
+            isOpen={isOpen}
+            onRequestClose={closeModal}
+            style={customStyles}
+            ariaHideApp={false}>
+            <h1>Log Out</h1>
+            <button onClick={closeModal}>닫기</button>
+            <button onClick={logout}>Log Out</button>
+          </Modal>
+        </> :
+        <>
+          <button className='nav-btn login-btn eng-font' onClick={openModal}>Log In</button>
+          <Modal
+            isOpen={isOpen}
+            onRequestClose={closeModal}
+            style={customStyles}
+            ariaHideApp={false}>
+            <h1>Log In</h1>
+            <button onClick={closeModal}>닫기</button>
+            <GoogleLoginButton closeModal={() => {setIsOpen(false)}}/>
+            <button>Login as Guest</button>
+          </Modal>
+        </>}
     </div>
   )
 }

@@ -4,8 +4,9 @@ import React from 'react';
 import { useRecoilState } from 'recoil';
 import useDispatchEvent from '../hooks/useDispatchEvent';
 import { userState } from '../state/userAtoms';
+import { GoogleLoginButtonProps } from "../types/components";
 
-const GoogleLoginButton: React.FC = () => {
+const GoogleLoginButton: React.FC<GoogleLoginButtonProps> = ({closeModal}) => {
   const [user, setUser] = useRecoilState(userState);
   const checkSessionEvent = useDispatchEvent('sign-in-out');
 
@@ -13,8 +14,9 @@ const GoogleLoginButton: React.FC = () => {
     const body = { token: token };
     axios
       .post('http://localhost:4000/user/login/google', body, { withCredentials: true })
-      .then((res) => { setUser({ ...res.data.userData }) })
-      .then((res) => { 
+      .then((res) => {
+        setUser({ ...res.data.userData }) 
+        closeModal();
         checkSessionEvent();
       })
       // login 동기화

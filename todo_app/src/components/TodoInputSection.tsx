@@ -44,7 +44,7 @@ const TodoInputSection: React.FC = () => {
     <div className='input-sec'>
       <CustomInput text={'제목'} recoilState={todoTitleState} />
       <CustomInput text={'할일'} recoilState={todoDescriptionState} />
-      <button className='addBtn' onClick={addTodo}>+</button>
+      <button className='add-btn' onClick={addTodo}>Add</button>
     </div>
   )
 }

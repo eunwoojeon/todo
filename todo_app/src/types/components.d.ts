@@ -30,6 +30,10 @@ export interface CustomInputProps {
   recoilState: RecoilState<string>;
 };
 
+export interface GoogleLoginButtonProps {
+  closeModal: Function;
+};
+
 export interface Alert {
   alertIsActive: boolean;
   alertText: string;
