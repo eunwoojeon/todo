@@ -1,6 +1,6 @@
 .input-sec {
   width: var(--main-width);
-  margin: var(--input-margin) 0 var(--input-margin) 0;
+  margin: var(--inputsec-margin) 0 var(--inputsec-margin) 0;
 
   display: flex;
   flex-direction: row;

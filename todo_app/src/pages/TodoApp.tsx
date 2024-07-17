@@ -15,7 +15,7 @@ const TodoApp: React.FC = () => {
   const checkSessionAndFetchUser = async () => {
     console.trace('check session and fetch user');
     await axios
-      .get('http://localhost:4000/checksession', {withCredentials: true})
+      .get('http://localhost:4000/checksession', { withCredentials: true })
       .then((res) => {
         if (res.data.isLogin) { // session is valid
           setUser({
@@ -62,6 +62,7 @@ const TodoApp: React.FC = () => {
       <div className='title title-font'>To-Do List</div>
       <div className='main'>
         <TodoInputSection />
+        <hr style={{alignSelf: 'stretch', width: '100%', border: 'solid 1px var(--list-bg-color)'}}/>
         <TodoListSection />
       </div>
     </div>

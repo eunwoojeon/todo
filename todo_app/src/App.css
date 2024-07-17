@@ -21,7 +21,7 @@
   -webkit-box-sizing: border-box;
   font-family: Noto Sans KR, Pretendard, sans-serif;
   /* 줄바뀜 제거 */
-  white-space : nowrap; 
+  white-space: nowrap;
 }
 
 .title-font {
@@ -38,48 +38,74 @@ button {
   background-color: transparent;
 }
 
+input {
+  border: none;
+  outline: none;
+  background-color: transparent;
+}
+
 @media screen and (max-width: 768px) {
   :root {
     --title-margin: 50px;
-    --input-margin: 50px;
-    --list-margin: 20px;
+    --inputsec-margin: 50px;
+    --input-right-margin: 1rem;
+    --list-vertical-margin: 1.25rem;
+    --item-horizontal-padding: 1rem;
+
+    /* input width = (main width - 6rem) / 2 */
     --main-width: 500px;
-    --input-width: 150px;
+    --input-width: 202px;
+    --input-height: 4.5rem;
+    --list-height: 4.5rem;
   }
 }
 
 @media screen and (min-width: 769px) and (max-width: 1024px) {
   :root {
     --title-margin: 50px;
-    --input-margin: 50px;
-    --list-margin: 20px;
+    --inputsec-margin: 50px;
+    --input-right-margin: 1rem;
+    --list-vertical-margin: 1.25rem;
+    --item-horizontal-padding: 1rem;
+
+    /* input width = (main width - 6rem) / 2 */
     --main-width: 600px;
-    --input-width: 200px;
+    --input-width: 252px;
+    --input-height: 4.5rem;
+    --list-height: 4.5rem;
   }
 }
 
 @media screen and (min-width: 1025px) {
   :root {
     --title-margin: 50px;
-    --input-margin: 50px;
-    --list-margin: 20px;
+    --inputsec-margin: 50px;
+    --input-right-margin: 1rem;
+    --list-vertical-margin: 1.25rem;
+    --item-horizontal-padding: 1rem;
+
+    /* input width = (main width - 6rem) / 2 */
     --main-width: 800px;
-    --input-width:280px;
+    --input-width: 352px;
+    --input-height: 4.5rem;
+    --list-height: 4.5rem;
   }
 }
 
 @media (prefers-color-scheme: light) {
   :root {
-    --bg-color: #EEF4F7;
+    --bg-color: #E5EEF0;
     --text-color: #0E1011;
-    --placeholder-text-color: #0E1011;
     
-    --input-bg-color: #C4E6F3;
-    --input-bg-color-hover: #CEF2FF;
-    --list-bg-color: #E7ECEF;
+    --input-bg-color: #CBD5E0;
+    --input-bg-color-hover: #A2AAB2;
+    --placeholder-text-color: #0E1011;
+
+    --list-bg-color: #DEE7E8;
+    --list-text-color: #3FE87F; /* 푸른 색 계열로 변경*/
 
     --login-bg-color: #AE2C00;
-    --add-bg-color: #CDE5EE;
+    --add-bg-color: #CBD5E0;
 
     --fontawesome: #0E1011;
   }
@@ -87,16 +113,18 @@ button {
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg-color: #080E11;
+    --bg-color: #0F181A;
     --text-color: #EEF0F1;
+    
+    --input-bg-color: #1E2933;
+    --input-bg-color-hover: #4B677F;
     --placeholder-text-color: #afafaf;
-    
-    --input-bg-color: #0C2D3A;
-    --input-bg-color-hover: #155066;
-    --list-bg-color: #101618;
-    
+
+    --list-bg-color: #171F21;
+    --list-text-color: #3FE87F;
+
     --login-bg-color: #AE2C00;
-    --add-bg-color: #112A32;
+    --add-bg-color: #1E2933;
 
     --fontawesome: #EEF0F1;
   }
