@@ -6,7 +6,7 @@ import { userState } from "../state/userAtoms";
 import GoogleLoginButton from './GoogleLoginButton';
 import './NavigatorBar.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMoon, faSun } from '@fortawesome/free-solid-svg-icons';
+import { faMoon, faSun, faXmark } from '@fortawesome/free-solid-svg-icons';
 
 const NavigatorBar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -60,7 +60,7 @@ const NavigatorBar: React.FC = () => {
 
   return (
     <div className='navBar'>
-      {isDarkMode ? <FontAwesomeIcon icon={faSun} style={{ color: 'var(--fontawesome)', cursor: 'pointer' }} /> : <FontAwesomeIcon icon={faMoon} style={{ color: 'var(--fontawesome)', cursor: 'pointer' }} />}
+      {isDarkMode ? <FontAwesomeIcon icon={faSun} size="lg" style={{ color: 'var(--fontawesome)', cursor: 'pointer' }} /> : <FontAwesomeIcon icon={faMoon} size="lg" style={{ color: 'var(--fontawesome)', cursor: 'pointer' }} />}
       {user.isLogin ?
         <>
           <button className='nav-btn login-btn eng-font' onClick={openModal}>Log Out</button>
@@ -69,8 +69,12 @@ const NavigatorBar: React.FC = () => {
             onRequestClose={closeModal}
             style={customStyles}
             ariaHideApp={false}>
+            <FontAwesomeIcon icon={faXmark} size="lg" onClick={closeModal} style={{
+              cursor: 'pointer',
+              position: 'absolute',
+              right: '1.2rem'
+            }} />
             <h1>Log Out</h1>
-            <button onClick={closeModal}>닫기</button>
             <button onClick={logout}>Log Out</button>
           </Modal>
         </> :
@@ -82,7 +86,11 @@ const NavigatorBar: React.FC = () => {
             style={customStyles}
             ariaHideApp={false}>
             <h1>Log In</h1>
-            <button onClick={closeModal}>닫기</button>
+            <FontAwesomeIcon icon={faXmark} size="lg" onClick={closeModal} style={{
+              cursor: 'pointer',
+              position: 'absolute',
+              right: '1.2rem'
+            }} />
             <GoogleLoginButton closeModal={() => { setIsOpen(false) }} />
             <button>Login as Guest</button>
           </Modal>
