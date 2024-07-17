@@ -60,7 +60,7 @@ const NavigatorBar: React.FC = () => {
 
   return (
     <div className='navBar'>
-      {isDarkMode ? <FontAwesomeIcon icon={faSun} style={{ color: 'var(--fontawesome)' }} /> : <FontAwesomeIcon icon={faMoon} style={{ color: 'var(--fontawesome)' }} />}
+      {isDarkMode ? <FontAwesomeIcon icon={faSun} style={{ color: 'var(--fontawesome)', cursor: 'pointer' }} /> : <FontAwesomeIcon icon={faMoon} style={{ color: 'var(--fontawesome)', cursor: 'pointer' }} />}
       {user.isLogin ?
         <>
           <button className='nav-btn login-btn eng-font' onClick={openModal}>Log Out</button>

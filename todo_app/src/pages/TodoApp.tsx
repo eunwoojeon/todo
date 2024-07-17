@@ -38,6 +38,7 @@ const TodoApp: React.FC = () => {
       .catch(console.error);
   }
   useEventListener('sign-in-out', checkSessionAndFetchUser, checkSessionAndFetchUser);
+
   // login 동기화
   // useEventListener('storage', checkSessionAndFetchUser, checkSessionAndFetchUser);
 

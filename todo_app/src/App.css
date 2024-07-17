@@ -49,6 +49,7 @@ input {
     --title-margin: 50px;
     --inputsec-margin: 50px;
     --input-right-margin: 1rem;
+    --input-left-padding: 0.4rem;
     --list-vertical-margin: 1.25rem;
     --item-horizontal-padding: 1rem;
 
@@ -56,7 +57,10 @@ input {
     --main-width: 500px;
     --input-width: 202px;
     --input-height: 4.5rem;
+    --input-rel-top: 1.5rem;
     --list-height: 4.5rem;
+
+    --byte_displayer-ft-size: 0.8rem;
   }
 }
 
@@ -65,6 +69,7 @@ input {
     --title-margin: 50px;
     --inputsec-margin: 50px;
     --input-right-margin: 1rem;
+    --input-left-padding: 0.4rem;
     --list-vertical-margin: 1.25rem;
     --item-horizontal-padding: 1rem;
 
@@ -72,7 +77,10 @@ input {
     --main-width: 600px;
     --input-width: 252px;
     --input-height: 4.5rem;
+    --input-rel-top: 1.5rem;
     --list-height: 4.5rem;
+
+    --byte_displayer-ft-size: 0.8rem;
   }
 }
 
@@ -81,6 +89,7 @@ input {
     --title-margin: 50px;
     --inputsec-margin: 50px;
     --input-right-margin: 1rem;
+    --input-left-padding: 0.4rem;
     --list-vertical-margin: 1.25rem;
     --item-horizontal-padding: 1rem;
 
@@ -88,7 +97,10 @@ input {
     --main-width: 800px;
     --input-width: 352px;
     --input-height: 4.5rem;
+    --input-rel-top: 1.5rem;
     --list-height: 4.5rem;
+
+    --byte_displayer-ft-size: 0.8rem;
   }
 }
 

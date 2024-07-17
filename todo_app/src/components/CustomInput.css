@@ -2,9 +2,8 @@
   width: var(--input-width);
   height: var(--input-height);
   margin-right: var(--input-right-margin);
+  padding-left: var(--input-left-padding);
 
-  display: flex;
-  
   border-radius: 20px;
   border: 2px solid var(--input-bg-color);
   background-color: var(--input-bg-color);
@@ -16,11 +15,21 @@
 
 .custom-input>input {
   width: 100%;
-  margin: 0 0.4rem 0 0.4rem;
+  position: relative;
+  top: var(--input-rel-top);
 
   color: var(--text-color);
-  
+
   &::placeholder {
     color: var(--placeholder-text-color);
   }
+}
+
+.custom-input>.byte_displayer {
+  position: relative;
+  top: 3rem;
+  right: 5rem;
+
+  font-size: var(--byte_displayer-ft-size);
+  color: var(--placeholder-text-color);
 }

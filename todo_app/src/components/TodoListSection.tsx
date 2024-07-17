@@ -101,7 +101,7 @@ const TodoListSection: React.FC = () => {
 
   return (
     <div className='list-sec'>
-      <FontAwesomeIcon className='refresh-btn' icon={faArrowsRotate} size="lg" onClick={() => { refreshEvent() }} style={{ color: 'var(--fontawesome)' }} />
+      <FontAwesomeIcon className='refresh-btn' icon={faArrowsRotate} size="lg" onClick={() => { refreshEvent() }} style={{ color: 'var(--fontawesome)', cursor: 'pointer' }} />
       <div>
         {todoList.map((todoItem: TodoItem, index: number) => (
           <div className='item' key={index}>
@@ -113,10 +113,10 @@ const TodoListSection: React.FC = () => {
                 </div>
                 <div key={index} data-id={todoItem._id} data-t={todoItem.title} data-d={todoItem.description}>
                   <button onClick={editTodo}>
-                    <FontAwesomeIcon icon={faPenToSquare} size="lg" style={{ color: 'var(--fontawesome)' }} />
+                    <FontAwesomeIcon icon={faPenToSquare} size="lg" style={{ color: 'var(--fontawesome)', cursor: 'pointer' }} />
                   </button>
                   <button onClick={deleteTodo}>
-                    <FontAwesomeIcon icon={faTrash} size="lg" style={{ color: 'var(--fontawesome)' }} />
+                    <FontAwesomeIcon icon={faTrash} size="lg" style={{ color: 'var(--fontawesome)', cursor: 'pointer' }} />
                   </button>
                 </div>
               </> :
@@ -127,10 +127,10 @@ const TodoListSection: React.FC = () => {
                 </div>
                 <div key={index} data-id={todoItem._id} data-t={todoItem.title} data-d={todoItem.description}>
                   <button onClick={updateTodo}>
-                    <FontAwesomeIcon icon={faCircleCheck} size="lg" style={{ color: 'var(--fontawesome)' }} />
+                    <FontAwesomeIcon icon={faCircleCheck} size="lg" style={{ color: 'var(--fontawesome)', cursor: 'pointer' }} />
                   </button>
                   <button onClick={cancelTodo}>
-                    <FontAwesomeIcon icon={faXmark} size="lg" style={{ color: 'var(--fontawesome)' }} />
+                    <FontAwesomeIcon icon={faXmark} size="lg" style={{ color: 'var(--fontawesome)', cursor: 'pointer' }} />
                   </button>
                 </div>
               </>
