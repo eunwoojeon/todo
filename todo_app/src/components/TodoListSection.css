@@ -16,7 +16,7 @@
   justify-content: space-between;
 
   border-radius: 20px;
-  
+
   &:has(.read) {
     padding: 0 var(--item-horizontal-padding) 0 var(--item-horizontal-padding);
     margin: var(--list-vertical-margin) 0 var(--list-vertical-margin) 0;
@@ -30,10 +30,17 @@
   flex-direction: column;
   justify-content: space-evenly;
 
-  >span:first-child {
+  :first-child {
     font-size: 1.5rem;
     color: var(--list-text-color);
   }
+}
+
+.item>.read>span {
+  width: var(--item_span-width);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .item>.edit {
