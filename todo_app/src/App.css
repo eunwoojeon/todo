@@ -120,6 +120,8 @@ input {
     --list-text-color: #3FE87F; /* 푸른 색 계열로 변경*/
 
     --login-bg-color: #AE2C00;
+    --modal_btn-bg-color: #F0F0F0;
+    --modal_btn-bg-color-hover: #CCCCCC;
     --add-bg-color: #CBD5E0;
 
     --fontawesome: #0E1011;
@@ -139,6 +141,8 @@ input {
     --list-text-color: #3FE87F;
 
     --login-bg-color: #AE2C00;
+    --modal_btn-bg-color: #F0F0F0;
+    --modal_btn-bg-color-hover: #CCCCCC;
     --add-bg-color: #1E2933;
 
     --fontawesome: #EEF0F1;

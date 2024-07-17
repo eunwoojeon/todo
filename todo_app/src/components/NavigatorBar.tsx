@@ -18,7 +18,7 @@ const NavigatorBar: React.FC = () => {
     },
     content: {
       width: '300px',
-      height: '400px',
+      height: '300px',
       margin: 'auto',
       borderRadius: '4px',
       boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)',
@@ -74,8 +74,10 @@ const NavigatorBar: React.FC = () => {
               position: 'absolute',
               right: '1.2rem'
             }} />
-            <h1>Log Out</h1>
-            <button onClick={logout}>Log Out</button>
+            <h1 className='eng-font'>Log Out</h1>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'space-around'  }}>
+              <button className='modal-btn eng-font' onClick={logout}>Log Out</button>
+            </div>
           </Modal>
         </> :
         <>
@@ -90,9 +92,11 @@ const NavigatorBar: React.FC = () => {
               position: 'absolute',
               right: '1.2rem'
             }} />
-            <h1>Log In</h1>
-            <GoogleLoginButton closeModal={() => { setIsOpen(false) }} />
-            <button>Login as Guest</button>
+            <h1 className='eng-font'>Log In</h1>
+            <div style={{ height: '50%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'space-around' }}>
+              <GoogleLoginButton closeModal={() => { setIsOpen(false) }} />
+              <button className='modal-btn eng-font'>Login as Guest</button>
+            </div>
           </Modal>
         </>}
     </div>

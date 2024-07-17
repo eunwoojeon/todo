@@ -21,3 +21,15 @@
   font-size: 0.9rem;
   font-weight: bold;
 }
+
+.modal-btn {
+  width: 14rem;
+  height: 2.4rem;
+
+  border-radius: 1.2rem;
+  font-size: 0.9rem;
+  background-color: var(--modal_btn-bg-color);
+  &:hover {
+    background-color: var(--modal_btn-bg-color-hover);
+  }
+}

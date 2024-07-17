@@ -43,7 +43,7 @@ const GoogleLoginButton: React.FC<GoogleLoginButtonProps> = ({closeModal}) => {
         onError={() => {
           console.error('GoogleLoginButton] @react-oauth/google login failed');
         }}
-      />;
+      />
     </div>
   )
 }
