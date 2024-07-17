@@ -85,12 +85,12 @@ const NavigatorBar: React.FC = () => {
             onRequestClose={closeModal}
             style={customStyles}
             ariaHideApp={false}>
-            <h1>Log In</h1>
             <FontAwesomeIcon icon={faXmark} size="lg" onClick={closeModal} style={{
               cursor: 'pointer',
               position: 'absolute',
               right: '1.2rem'
             }} />
+            <h1>Log In</h1>
             <GoogleLoginButton closeModal={() => { setIsOpen(false) }} />
             <button>Login as Guest</button>
           </Modal>
