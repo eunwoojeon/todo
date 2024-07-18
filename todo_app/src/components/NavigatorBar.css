@@ -16,8 +16,6 @@
   padding: 0 1rem 0 1rem;
   border-radius: 1.2rem;
 
-  background-color: var(--login-bg-color);
-  color: var(--text-color);
   font-size: 0.9rem;
   font-weight: bold;
 }
@@ -28,8 +26,4 @@
 
   border-radius: 1.2rem;
   font-size: 0.9rem;
-  background-color: var(--modal_btn-bg-color);
-  &:hover {
-    background-color: var(--modal_btn-bg-color-hover);
-  }
 }

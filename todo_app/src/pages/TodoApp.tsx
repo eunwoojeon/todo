@@ -7,6 +7,10 @@ import useEventListener from '../hooks/useEventListener';
 import { todoListState } from '../state/todoAtoms';
 import { userState } from '../state/userAtoms';
 import './TodoApp.css';
+import { ThemeProvider } from 'styled-components';
+import useDarkMode from '../hooks/useDarkMode';
+import { darkTheme, lightTheme } from '../style/theme';
+import GlobalStyles from '../style/globalStyles';
 
 const TodoApp: React.FC = () => {
   const [user, setUser] = useRecoilState(userState);
@@ -56,17 +60,23 @@ const TodoApp: React.FC = () => {
   //   }
   // );
 
+  // dark mode
+  const [isDarkMode, setIsDarkMode] = useDarkMode();
+
   return (
-    <div className='todoApp'>
-      <AlertBanner />
-      <NavigatorBar />
-      <div className='title title-font'>To-Do List</div>
-      <div className='main'>
-        <TodoInputSection />
-        <hr style={{alignSelf: 'stretch', width: '100%', border: 'solid 1px var(--list-bg-color)'}}/>
-        <TodoListSection />
+    <ThemeProvider theme={isDarkMode ? darkTheme : lightTheme}>
+      <GlobalStyles />
+      <div className='todoApp'>
+        <AlertBanner />
+        <NavigatorBar />
+        <div className='title title-font'>To-Do List</div>
+        <div className='main'>
+          <TodoInputSection />
+          <hr />
+          <TodoListSection />
+        </div>
       </div>
-    </div>
+    </ThemeProvider>
   )
 }
 

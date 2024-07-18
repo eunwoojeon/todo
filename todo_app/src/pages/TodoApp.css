@@ -4,9 +4,6 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-
-  background-color: var(--bg-color);
-  color: var(--text-color);
 }
 
 .title {
@@ -18,4 +15,9 @@
 .main {
   display: flex;
   flex-direction: column;
+}
+
+.main > hr {
+  align-self: stretch;
+  width: 100%;
 }

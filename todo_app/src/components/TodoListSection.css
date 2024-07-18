@@ -20,8 +20,6 @@
 
   &:has(.read) {
     padding: 0 var(--item-horizontal-padding) 0 var(--item-horizontal-padding);
-
-    background-color: var(--list-bg-color);
   }
 }
 
@@ -32,7 +30,6 @@
 
   :first-child {
     font-size: 1.5rem;
-    color: var(--list-text-color);
   }
 }
 

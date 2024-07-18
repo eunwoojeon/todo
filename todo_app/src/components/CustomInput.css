@@ -5,24 +5,12 @@
   padding-left: var(--input-left-padding);
 
   border-radius: 20px;
-  border: 2px solid var(--input-bg-color);
-  background-color: var(--input-bg-color);
-
-  &:hover {
-    border: 2px solid var(--input-bg-color-hover);
-  }
 }
 
 .custom-input>input {
   width: 100%;
   position: relative;
   top: var(--input-rel-top);
-
-  color: var(--text-color);
-
-  &::placeholder {
-    color: var(--placeholder-text-color);
-  }
 }
 
 .custom-input>.byte_displayer {
@@ -31,5 +19,4 @@
   right: 5rem;
 
   font-size: var(--byte_displayer-ft-size);
-  color: var(--placeholder-text-color);
 }

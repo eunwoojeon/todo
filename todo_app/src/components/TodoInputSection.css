@@ -13,8 +13,6 @@
   height: 4rem;
   border-radius: 2rem;
 
-  background-color: var(--add-bg-color);
-  color: var(--text-color);
   font-size: 1.1rem;
   font-weight: bold;
 }

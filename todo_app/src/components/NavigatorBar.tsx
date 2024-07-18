@@ -7,8 +7,10 @@ import GoogleLoginButton from './GoogleLoginButton';
 import './NavigatorBar.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMoon, faSun, faXmark } from '@fortawesome/free-solid-svg-icons';
+import { darkModeState } from '../state/common';
 
 const NavigatorBar: React.FC = () => {
+  // modal window setting
   const [isOpen, setIsOpen] = useState(false);
   const openModal = () => setIsOpen(true);
   const closeModal = () => setIsOpen(false);
@@ -45,22 +47,12 @@ const NavigatorBar: React.FC = () => {
       .finally(() => { window.location.reload() }) // 새로고침
   }
 
-  const [isDarkMode, setIsDarkMode] = useState(false);
-  useEffect(() => {
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    setIsDarkMode(mediaQuery.matches);
-
-    const handleChange = (e: MediaQueryListEvent) => { setIsDarkMode(e.matches) }
-    mediaQuery.addEventListener('change', handleChange); // mount
-
-    return () => {
-      mediaQuery.removeEventListener('change', handleChange); // unmount
-    }
-  }, []);
+  // dark mode
+  const [isDarkMode, setIsDarkMode] = useRecoilState(darkModeState);
 
   return (
     <div className='navBar'>
-      {isDarkMode ? <FontAwesomeIcon icon={faSun} size="lg" style={{ color: 'var(--fontawesome)', cursor: 'pointer' }} /> : <FontAwesomeIcon icon={faMoon} size="lg" style={{ color: 'var(--fontawesome)', cursor: 'pointer' }} />}
+      {isDarkMode ? <FontAwesomeIcon className='fontawesome' icon={faMoon} size="lg" onClick={() => { setIsDarkMode(false) }} /> : <FontAwesomeIcon className='fontawesome' icon={faSun} size="lg" onClick={() => { setIsDarkMode(true) }} />}
       {user.isLogin ?
         <>
           <button className='nav-btn login-btn eng-font' onClick={openModal}>Log Out</button>
@@ -75,7 +67,7 @@ const NavigatorBar: React.FC = () => {
               right: '1.2rem'
             }} />
             <h1 className='eng-font'>Log Out</h1>
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'space-around'  }}>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'space-around' }}>
               <button className='modal-btn eng-font' onClick={logout}>Log Out</button>
             </div>
           </Modal>

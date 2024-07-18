@@ -44,6 +44,10 @@ input {
   background-color: transparent;
 }
 
+.fontawesome {
+  cursor: pointer;
+}
+
 @media screen and (max-width: 768px) {
   :root {
     --title-margin: 50px;
@@ -104,47 +108,5 @@ input {
     --item_span-width: 700px;
 
     --byte_displayer-ft-size: 0.8rem;
-  }
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    --bg-color: #E5EEF0;
-    --text-color: #0E1011;
-    
-    --input-bg-color: #CBD5E0;
-    --input-bg-color-hover: #A2AAB2;
-    --placeholder-text-color: #0E1011;
-
-    --list-bg-color: #DEE7E8;
-    --list-text-color: #3FE87F; /* 푸른 색 계열로 변경*/
-
-    --login-bg-color: #AE2C00;
-    --modal_btn-bg-color: #F0F0F0;
-    --modal_btn-bg-color-hover: #CCCCCC;
-    --add-bg-color: #CBD5E0;
-
-    --fontawesome: #0E1011;
-  }
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg-color: #0F181A;
-    --text-color: #EEF0F1;
-    
-    --input-bg-color: #1E2933;
-    --input-bg-color-hover: #4B677F;
-    --placeholder-text-color: #afafaf;
-
-    --list-bg-color: #171F21;
-    --list-text-color: #3FE87F;
-
-    --login-bg-color: #AE2C00;
-    --modal_btn-bg-color: #F0F0F0;
-    --modal_btn-bg-color-hover: #CCCCCC;
-    --add-bg-color: #1E2933;
-
-    --fontawesome: #EEF0F1;
   }
 }
