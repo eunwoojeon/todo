@@ -6,7 +6,7 @@ import { userState } from "../state/userAtoms";
 import GoogleLoginButton from './GoogleLoginButton';
 import './NavigatorBar.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMoon, faSun, faXmark } from '@fortawesome/free-solid-svg-icons';
+import { faGear, faMoon, faSun, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { darkModeState } from '../state/common';
 
 const NavigatorBar: React.FC = () => {
@@ -52,7 +52,8 @@ const NavigatorBar: React.FC = () => {
 
   return (
     <div className='navBar'>
-      {isDarkMode ? <FontAwesomeIcon className='fontawesome' icon={faMoon} size="lg" onClick={() => { setIsDarkMode(false) }} /> : <FontAwesomeIcon className='fontawesome' icon={faSun} size="lg" onClick={() => { setIsDarkMode(true) }} />}
+      {isDarkMode ? <FontAwesomeIcon className='fontawesome nav-btn' icon={faMoon} size="lg" onClick={() => { setIsDarkMode(false) }} /> : <FontAwesomeIcon className='fontawesome' icon={faSun} size="lg" onClick={() => { setIsDarkMode(true) }} />}
+      <FontAwesomeIcon className='fontawesome nav-btn' icon={faGear} size="lg" onClick={() => { }} />
       {user.isLogin ?
         <>
           <button className='nav-btn login-btn eng-font' onClick={openModal}>Log Out</button>
