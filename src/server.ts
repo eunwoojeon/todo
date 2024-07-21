@@ -141,7 +141,7 @@ server.route('/todo')
   })
   .post(async (req: Request, res: Response) => {
     if (req.session && req.session.userId) {
-      switch (req.query.write) {
+      switch (req.query.case) {
         case 'create':
           await dbmanager
             .saveTodo(req.session.userId, req.body.title, req.body.desc)
@@ -155,6 +155,16 @@ server.route('/todo')
         case 'update':
           await dbmanager
             .updateTodo(req.body.todoId, req.body.title, req.body.desc)
+            .then((msg) => { res.status(200).json({ message: msg, isSuccess: true }) })
+            .catch((err) => {
+              console.error(err.stack);
+              res.status(500).json({ message: err.message, isSuccess: false });
+            });
+          break;
+
+        case 'status':
+          await dbmanager
+            .updateStatus(req.body.todoId, req.body.status)
             .then((msg) => { res.status(200).json({ message: msg, isSuccess: true }) })
             .catch((err) => {
               console.error(err.stack);

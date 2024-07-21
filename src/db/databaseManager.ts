@@ -1,9 +1,9 @@
 import mongoose from "mongoose";
+import { SNS_TYPE } from "../types/user";
+import TodoModel from "./schemas/todo";
+import UserModel from "./schemas/user";
 // protocol:// + username:password@cluster-url/database?retryWrites=true&w=majority
 const uri = "mongodb+srv://ewjeon:doiAwDjOHuSfDf4p@cluster0.vnq3j1u.mongodb.net/todo?retryWrites=true&w=majority&appName=Cluster0";
-import UserModel from "./schemas/user";
-import TodoModel from "./schemas/todo";
-import { SNS_TYPE } from "../types/user";
 
 export default class DatabaseManager {
   constructor() {
@@ -46,7 +46,7 @@ export default class DatabaseManager {
 
   //#region user
   async saveUser(sub_id: string, email: string, sns_type: SNS_TYPE, name: string, picture: string) {
-    const filter = {sub_id: sub_id};
+    const filter = { sub_id: sub_id };
     const update = {
       email: email,
       sns_type: sns_type,
@@ -76,11 +76,11 @@ export default class DatabaseManager {
   }
 
   async findOneUser(sub_id: string) {
-    const result = await UserModel.findOne({sub_id: sub_id}).exec();
+    const result = await UserModel.findOne({ sub_id: sub_id }).exec();
     if (null !== result) {
       return {
         msg: 'USER] Save find successfully',
-        data: {...result}
+        data: { ...result }
       };
     } else {
       throw new Error('USER] Failed to find data');
@@ -102,7 +102,7 @@ export default class DatabaseManager {
       user_id: user_id,
       title: title,
       description: desc,
-      status: 'pending'
+      status: 'PENDING'
     });
 
     const result = await todo.save();
@@ -115,7 +115,7 @@ export default class DatabaseManager {
 
   async findAllTodoByUserId(user_id: string) {
     const result = await TodoModel.find({ user_id: user_id }).exec();
-    return {message: 'TODO] Find data successfully', todoList: result};
+    return { message: 'TODO] Find data successfully', todoList: result };
   }
 
   async updateTodo(id: string, title: string, desc: string) {
@@ -128,9 +128,11 @@ export default class DatabaseManager {
     }
   }
 
-  async updateStatus(id: string, status: string) {
-    const result = await TodoModel.updateOne({ _id: id }, { status: status }, { upsert: false }).exec();
+  async updateStatus(id: string, isCompleted: boolean) {
+    const status = isCompleted? 'COMPLETE' : 'PENDING';
 
+    const result = await TodoModel.updateOne({ _id: id }, { status: status }, { upsert: false }).exec();
+    console.log(result);
     if (true === result.acknowledged && 1 === result.modifiedCount) {
       return 'TODO] Update status successfully';
     } else {

@@ -22,7 +22,6 @@ const TodoListSection: React.FC = () => {
   const [editTitle, setEditTitle] = useRecoilState(editTitleState);
   const [editDesc, setEditDesc] = useRecoilState(editDescriptionState);
   useEventListener('refresh', async () => {
-    console.trace('refresh todo list');
     axios
       .get('http://localhost:4000/todo', { withCredentials: true })
       .then((res) => {
@@ -40,13 +39,24 @@ const TodoListSection: React.FC = () => {
   });
   const refreshEvent = useDispatchEvent('refresh');
 
+  const getDataset = (e: React.SyntheticEvent<EventTarget>) => {
+    const currentTarget = e.currentTarget as HTMLButtonElement;
+    const parentElement = currentTarget.parentElement as HTMLDivElement;
+    const target = parentElement.parentElement as HTMLDivElement;
+    const dataset = {
+      id: target.dataset.id,
+      title: target.dataset.t,
+      desc: target.dataset.d
+    }
+
+    return dataset;
+  }
+
   // todo delete request
   const deleteTodo = (e: React.SyntheticEvent<EventTarget>) => {
-    if (!(e.currentTarget instanceof HTMLButtonElement)) return;
-    if (!(e.currentTarget.parentElement instanceof HTMLDivElement)) return;
-    const todoId = e.currentTarget.parentElement.dataset.id;
+    const { id, ...rest } = getDataset(e);
     axios
-      .delete('http://localhost:4000/todo', { params: { todoId: todoId }, withCredentials: true })
+      .delete('http://localhost:4000/todo', { params: { todoId: id }, withCredentials: true })
       .then((res) => {
         refreshEvent(); // refresh list
       })
@@ -61,16 +71,14 @@ const TodoListSection: React.FC = () => {
 
   // todo update request
   const updateTodo = (e: React.SyntheticEvent<EventTarget>) => {
-    if (!(e.currentTarget instanceof HTMLButtonElement)) return;
-    if (!(e.currentTarget.parentElement instanceof HTMLDivElement)) return;
-    const todoId = e.currentTarget.parentElement.dataset.id;
+    const { id, ...rest } = getDataset(e);
     const body = {
-      todoId: todoId,
+      todoId: id,
       title: editTitle,
       desc: editDesc
     }
     axios
-      .post('http://localhost:4000/todo', body, { params: { write: 'update' }, withCredentials: true })
+      .post('http://localhost:4000/todo', body, { params: { case: 'update' }, withCredentials: true })
       .then((res) => {
         refreshEvent(); // refresh list
       })
@@ -85,18 +93,42 @@ const TodoListSection: React.FC = () => {
 
   // change to edit mode
   const editTodo = (e: React.SyntheticEvent<EventTarget>) => {
-    if (!(e.currentTarget instanceof HTMLButtonElement)) return;
-    if (!(e.currentTarget.parentElement instanceof HTMLDivElement)) return;
-    setEditId(e.currentTarget.parentElement.dataset.id as string);
-    setEditTitle(e.currentTarget.parentElement.dataset.t as string);
-    setEditDesc(e.currentTarget.parentElement.dataset.d as string);
+    const { id, title, desc } = getDataset(e);
+    setEditId(id as string);
+    setEditTitle(title as string);
+    setEditDesc(desc as string);
   }
 
   // return to read mode
   const cancelTodo = (e: React.SyntheticEvent<EventTarget>) => {
-    if (!(e.currentTarget instanceof HTMLButtonElement)) return;
-    if (!(e.currentTarget.parentElement instanceof HTMLDivElement)) return;
     setEditId('');
+  }
+
+  const checkedEvent = (e: React.SyntheticEvent<EventTarget>) => {
+    const target = e.target as HTMLInputElement;
+    const parentElement = target.parentElement as HTMLDivElement;
+
+    let isCompleted = false;
+    if (target.checked) {
+      isCompleted = true;
+    }
+
+    const body = { 
+      todoId: parentElement.dataset.id,
+      status: isCompleted
+    }
+    axios
+      .post('http://localhost:4000/todo', body, { params: { case: 'status' }, withCredentials: true })
+      .then((res) => {
+        refreshEvent(); // refresh list
+      })
+      .catch((err) => {
+        if (err.response.status === 401) {
+          alertEvent();
+        } else {
+          console.error(err);
+        }
+      });
   }
 
   return (
@@ -104,15 +136,15 @@ const TodoListSection: React.FC = () => {
       <FontAwesomeIcon className='refresh-btn fontawesome' icon={faArrowsRotate} size="lg" onClick={() => { refreshEvent() }} />
       <div>
         {todoList.map((todoItem: TodoItem, index: number) => (
-          <div className='item' key={index}>
+          <div className='item' key={index} data-id={todoItem._id} data-t={todoItem.title} data-d={todoItem.description} data-s={todoItem.status}>
             {editId != todoItem._id ?
               <>
-                <input type='checkbox' onChange={(e) => {if (e.target.checked) {console.log("check")} else {console.log("uncheck")}}}/>
+                <input type='checkbox' onChange={checkedEvent} checked={todoItem.status === 'COMPLETE'}/>
                 <div className='read'>
                   <span>{todoItem.title}</span>
                   <span>{todoItem.description}</span>
                 </div>
-                <div key={index} data-id={todoItem._id} data-t={todoItem.title} data-d={todoItem.description}>
+                <div key={index}>
                   <button onClick={editTodo}>
                     <FontAwesomeIcon className='fontawesome' icon={faPenToSquare} size="lg" />
                   </button>
@@ -126,7 +158,7 @@ const TodoListSection: React.FC = () => {
                   <CustomInput text={todoItem.title} recoilState={editTitleState} />
                   <CustomInput text={todoItem.description} recoilState={editDescriptionState} />
                 </div>
-                <div key={index} data-id={todoItem._id} data-t={todoItem.title} data-d={todoItem.description}>
+                <div key={index}>
                   <button onClick={updateTodo}>
                     <FontAwesomeIcon className='fontawesome' icon={faCircleCheck} size="lg" />
                   </button>

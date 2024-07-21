@@ -28,7 +28,7 @@ const TodoInputSection: React.FC = () => {
     }
 
     axios
-      .post('http://localhost:4000/todo', body, { params: { write: 'create' }, withCredentials: true })
+      .post('http://localhost:4000/todo', body, { params: { case: 'create' }, withCredentials: true })
       .then((res) => {
         refreshEvent(); // refresh list
       })
