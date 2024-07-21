@@ -4,10 +4,10 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "running": "node dist/server.js", // 빌드 파일 실행
-    "start": "ts-node src/server.ts", // 실행
-    "build": "tsc", // 빌드
-    "dev": "nodemon --watch src --exec ts-node src/server.ts", // 개발중
+    "start": "ts-node src/server.ts",
+    "dev": "nodemon --watch src --exec ts-node src/server.ts",
+    "running": "node dist/server.js",
+    "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
