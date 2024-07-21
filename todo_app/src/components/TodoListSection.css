@@ -55,11 +55,15 @@
   border-color: #FFF;
   animation: checkAnim .2s ease;
 }
-
 @keyframes checkAnim {
   from {
     transform: rotate(45deg) scale(0);
   }
+}
+
+.item:has(input:checked) {
+  text-decoration: line-through;
+  text-decoration-thickness: 3px;
 }
 
 .item>.read {
