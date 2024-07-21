@@ -17,6 +17,11 @@ const TodoInputSection: React.FC = () => {
 
   // todo save request
   const addTodo = async () => {
+    if (!todoTitle || !todoDesc) {
+      alert('제목과 할일을 입력해 주세요.');
+      return;
+    }
+
     const body = {
       title: todoTitle,
       desc: todoDesc
