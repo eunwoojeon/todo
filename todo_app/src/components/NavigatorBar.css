@@ -1,5 +1,6 @@
 .navBar {
   width: 100%;
+  min-width: var(--main-width);
   padding: 1rem;
   
   display: flex;

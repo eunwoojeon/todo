@@ -57,13 +57,8 @@ const NavigatorBar: React.FC = () => {
       {user.isLogin ?
         <>
           <button className='nav-btn login-btn eng-font' onClick={openModal}>Log Out</button>
-          <Modal
-            isOpen={isOpen}
-            onRequestClose={closeModal}
-            style={customStyles}
-            ariaHideApp={false}>
-            <FontAwesomeIcon icon={faXmark} size="lg" onClick={closeModal} style={{
-              cursor: 'pointer',
+          <Modal isOpen={isOpen} onRequestClose={closeModal} style={customStyles} ariaHideApp={false}>
+            <FontAwesomeIcon className='fontawesome' icon={faXmark} size="lg" onClick={closeModal} style={{
               position: 'absolute',
               right: '1.2rem'
             }} />
@@ -75,13 +70,8 @@ const NavigatorBar: React.FC = () => {
         </> :
         <>
           <button className='nav-btn login-btn eng-font' onClick={openModal}>Log In</button>
-          <Modal
-            isOpen={isOpen}
-            onRequestClose={closeModal}
-            style={customStyles}
-            ariaHideApp={false}>
-            <FontAwesomeIcon icon={faXmark} size="lg" onClick={closeModal} style={{
-              cursor: 'pointer',
+          <Modal isOpen={isOpen} onRequestClose={closeModal} style={customStyles} ariaHideApp={false}>
+            <FontAwesomeIcon className='fontawesome' icon={faXmark} size="lg" onClick={closeModal} style={{
               position: 'absolute',
               right: '1.2rem'
             }} />

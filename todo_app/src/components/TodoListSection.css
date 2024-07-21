@@ -35,7 +35,7 @@
 }
 
 .item>input[type='checkbox']:checked {
-  background-color: skyblue;
+  background-color: #76D7EA;
 }
 
 .item>input[type='checkbox']::before {
