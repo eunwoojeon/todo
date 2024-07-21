@@ -63,7 +63,7 @@ input {
     --input-height: 4.5rem;
     --input-rel-top: 1.5rem;
     --list-height: 4.5rem;
-    --item_span-width: 400px;
+    --item_span-width: 350px;
 
     --byte_displayer-ft-size: 0.8rem;
   }
@@ -84,7 +84,7 @@ input {
     --input-height: 4.5rem;
     --input-rel-top: 1.5rem;
     --list-height: 4.5rem;
-    --item_span-width: 500px;
+    --item_span-width: 450px;
 
     --byte_displayer-ft-size: 0.8rem;
   }
@@ -105,7 +105,7 @@ input {
     --input-height: 4.5rem;
     --input-rel-top: 1.5rem;
     --list-height: 4.5rem;
-    --item_span-width: 700px;
+    --item_span-width: 650px;
 
     --byte_displayer-ft-size: 0.8rem;
   }

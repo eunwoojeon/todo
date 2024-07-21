@@ -15,11 +15,50 @@
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  align-items: center;
 
   border-radius: 20px;
 
   &:has(.read) {
     padding: 0 var(--item-horizontal-padding) 0 var(--item-horizontal-padding);
+  }
+}
+
+.item>input[type='checkbox'] {
+  position: relative;
+  width: 28px;
+  height: 28px;
+  background-color: #CFCFCF;
+  border-radius: 15px;
+  appearance: none;
+  cursor: pointer;
+}
+
+.item>input[type='checkbox']:checked {
+  background-color: skyblue;
+}
+
+.item>input[type='checkbox']::before {
+  content: '';
+  position: absolute;
+  top: 4px;
+  left: 9px;
+  width: 5px;
+  height: 13px;
+  border: 4px solid transparent;
+  border-left: none;
+  border-top: none;
+  transform: rotate(45deg) scale(1);
+}
+
+.item>input[type='checkbox']:checked::before {
+  border-color: #FFF;
+  animation: checkAnim .2s ease;
+}
+
+@keyframes checkAnim {
+  from {
+    transform: rotate(45deg) scale(0);
   }
 }
 

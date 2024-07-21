@@ -107,6 +107,7 @@ const TodoListSection: React.FC = () => {
           <div className='item' key={index}>
             {editId != todoItem._id ?
               <>
+                <input type='checkbox' onChange={(e) => {if (e.target.checked) {console.log("check")} else {console.log("uncheck")}}}/>
                 <div className='read'>
                   <span>{todoItem.title}</span>
                   <span>{todoItem.description}</span>
