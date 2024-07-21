@@ -13,7 +13,7 @@ const GoogleLoginButton: React.FC<GoogleLoginButtonProps> = ({closeModal}) => {
   const request_login = async (token: string) => {
     const body = { token: token };
     axios
-      .post('http://localhost:4000/user/login/google', body, { withCredentials: true })
+      .post('http://localhost:4000/user', body, { withCredentials: true })
       .then((res) => {
         setUser({ ...res.data.userData }) 
         closeModal();

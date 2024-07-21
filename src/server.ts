@@ -31,7 +31,7 @@ server.use(session({
     mongoUrl: 'mongodb+srv://ewjeon:doiAwDjOHuSfDf4p@cluster0.vnq3j1u.mongodb.net/todo?retryWrites=true&w=majority&appName=Cluster0',
   }), // 세션 저장소
   // cookie: { secure: false, maxAge: 1000 * 10}, // 10sec
-  cookie: { secure: false, maxAge: (1000 * 60 * 60) * 24 }, // ms * sec * min * hour
+  cookie: { secure: false, maxAge: (1000 * 60 * 60) * 24 * 365 }, // ms * sec * min * hour * day
   rolling: true // 모든 response가 있을 때마다 세션 만기를 재설정
 }))
 // CORS 방지
@@ -79,48 +79,74 @@ server.get('/checksession', (req: Request, res: Response) => {
 });
 
 //#region '/user' route
-server.post('/user/login/google', async (req: Request, res: Response) => {
-  const decodedToken = jwt.decode(req.body.token) as GoogleToken;
+server.route('/user')
+  .post(async (req: Request, res: Response) => {
+    const decodedToken = jwt.decode(req.body.token) as GoogleToken;
+    await dbmanager
+      .saveUser(decodedToken.sub, decodedToken.email, 'GOOGLE', decodedToken.name, decodedToken.picture)
+      .then((result) => {
+        req.session.email = result.userData.email;
+        req.session.userId = result.userData._id;
+        req.session.name = result.userData.name;
+        req.session.picture = result.userData.picture;
+        req.session.save();
+        console.log(req.session);
+        return result;
+      })
+      .then((result) => {
+        const { _id, ...rest } = result.userData;
+        res.status(200).json({ message: result.message, isSuccess: true, userData: rest });
+      })
+      .catch((err) => {
+        console.error(err.stack);
+        const userData = {
+          email: '', name: '', picture: ''
+        }
+        res.status(500).json({ message: err.message, isSuccess: false, userData: userData });
+      });
+  })
+  .get(async (req: Request, res: Response) => {
+    if (req.session) {
+      req.session.destroy((err) => {
+        if (err) {
+          console.error('Logout error:', err);
+          return res.status(500).json({ message: 'USER] Logout failed', isSuccess: false });
+        }
+        res.clearCookie('connect.sid');
+        console.log(`Session destroyed: session = ${req.session}`); // undefined!
+        return res.status(200).json({ message: 'USER] Logout success', isSuccess: true });
+      });
 
-  await dbmanager
-    .saveUser(decodedToken.sub, decodedToken.email, 'GOOGLE', decodedToken.name, decodedToken.picture)
-    .then((result) => {
-      req.session.email = result.userData.email;
-      req.session.userId = result.userData._id;
-      req.session.name = result.userData.name;
-      req.session.picture = result.userData.picture;
-      console.log(req.session);
-      return result;
-    })
-    .then((result) => {
-      const { _id, ...rest } = result.userData;
-      res.status(200).json({ message: result.message, isSuccess: true, userData: rest });
-    })
-    .catch((err) => {
-      console.error(err.stack);
-      const userData = {
-        email: '', name: '', picture: ''
-      }
-      res.status(500).json({ message: err.message, isSuccess: false, userData: userData });
-    });
-})
+    } else {
+      res.status(200).json({ message: 'USER] Session already not exists', isSuccess: true });
+    }
+  })
+  .delete(async (req: Request, res: Response) => {
+    if (req.session && req.session.userId) {
+      // delete user information
+      await dbmanager
+        // .deleteUser(req.session.userId)
+        .transactionalDeleteUser(req.session.userId)
+        .then(() => console.log('User Account Transactional Deleted'))
+        .catch((err) => {
+          console.error(err.stack);
+          res.status(500).json({ message: 'USER] Failed to delete ID', isSuccess: false });
+        });
 
-server.get('/user/logout/google', async (req: Request, res: Response) => {
-  if (req.session) {
-    req.session.destroy((err) => {
-      if (err) {
-        console.error('Logout error:', err);
-        return res.status(500).json({ message: 'USER] Logout failed', isSuccess: false });
-      }
-      res.clearCookie('connect.sid');
-      console.log(req.session); // undefined!
-      return res.status(200).json({ message: 'USER] Logout success', isSuccess: true });
-    });
-
-  } else {
-    res.status(200).json({ message: 'USER] Session already not exists', isSuccess: true });
-  }
-});
+      // session destroy
+      req.session.destroy((err) => {
+        if (err) {
+          console.error('Logout error:', err);
+          return res.status(500).json({ message: 'USER] Logout success', isSuccess: false });
+        }
+        res.clearCookie('connect.sid');
+        console.log(`Session destroyed: session = ${req.session}`); // undefined!
+        return res.status(200).json({ message: 'USER] Logout success', isSuccess: true });
+      });
+    } else {
+      res.status(401).json({ message: 'USER] Session does not exist', isSuccess: false });
+    }
+  })
 //#endregion
 
 //#region '/todo' route

@@ -17,7 +17,6 @@ const TodoApp: React.FC = () => {
   const refreshEvent = useDispatchEvent('refresh');
   const resetList = useResetRecoilState(todoListState);
   const checkSessionAndFetchUser = async () => {
-    console.trace('check session and fetch user');
     await axios
       .get('http://localhost:4000/checksession', { withCredentials: true })
       .then((res) => {

@@ -104,7 +104,7 @@ const TodoListSection: React.FC = () => {
     setEditId('');
   }
 
-  const checkedEvent = (e: React.SyntheticEvent<EventTarget>) => {
+  const checkedEvent = async (e: React.SyntheticEvent<EventTarget>) => {
     const target = e.target as HTMLInputElement;
     const parentElement = target.parentElement as HTMLDivElement;
 

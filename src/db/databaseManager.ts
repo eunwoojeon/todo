@@ -87,12 +87,30 @@ export default class DatabaseManager {
     }
   }
 
-  async updateUser(sub_id: string, email: string, sns_type: SNS_TYPE, name: string, picture: string) {
-
+  async deleteUser(id: string) {
+    const result = await UserModel.deleteOne({ _id: id }).exec();
+    console.log(result);
+    if (true === result.acknowledged && 1 === result.deletedCount) {
+      return 'USER] Delete data successfully';
+    } else {
+      throw new Error('USER] Failed to delete data');
+    }
   }
 
-  async deleteUser() {
-
+  async transactionalDeleteUser(id: string) {
+    const session = await mongoose.startSession(); // session 초기화
+    session.startTransaction(); // session start
+    try {
+      await UserModel.deleteOne({ _id: id }).session(session);
+      await TodoModel.deleteMany({ user_id: id }).session(session);
+      
+      await session.commitTransaction(); // session commit
+    } catch (error) {
+      await session.abortTransaction(); // session rollback
+      throw error
+    } finally {
+      session.endSession(); // session end
+    }
   }
   //#endregion
 
@@ -129,7 +147,7 @@ export default class DatabaseManager {
   }
 
   async updateStatus(id: string, isCompleted: boolean) {
-    const status = isCompleted? 'COMPLETE' : 'PENDING';
+    const status = isCompleted ? 'COMPLETE' : 'PENDING';
 
     const result = await TodoModel.updateOne({ _id: id }, { status: status }, { upsert: false }).exec();
     console.log(result);
