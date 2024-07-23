@@ -33,7 +33,8 @@ const NavigatorBar: React.FC = () => {
   const resetUser = useResetRecoilState(userState);
   const logout = async () => {
     axios
-      .get('http://localhost:4000/user', { withCredentials: true })
+      // .get('http://localhost:4000/user', { withCredentials: true })
+      .get('https://www.toy-todo.store/user', { withCredentials: true })
       .then((res) => {
         resetUser();
         setIsOpen(false);
@@ -50,7 +51,8 @@ const NavigatorBar: React.FC = () => {
   const deleteUser = async () => {
     if (window.confirm('데이터가 영구 삭제됩니다. 탈퇴하시겠습니까?')) {
       axios
-        .delete('http://localhost:4000/user', { withCredentials: true })
+        // .delete('http://localhost:4000/user', { withCredentials: true })
+        .delete('https://www.toy-todo.store/user', { withCredentials: true })
         .then((res) => {
           console.log('성공');
           resetUser();
