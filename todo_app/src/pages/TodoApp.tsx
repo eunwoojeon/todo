@@ -18,7 +18,8 @@ const TodoApp: React.FC = () => {
   const resetList = useResetRecoilState(todoListState);
   const checkSessionAndFetchUser = async () => {
     await axios
-      .get('http://localhost:4000/checksession', { withCredentials: true })
+      // .get('http://localhost:4000/checksession', { withCredentials: true })
+      .get('http://www.toy-todo.store/checksession', { withCredentials: true })
       .then((res) => {
         if (res.data.isLogin) { // session is valid
           setUser({
