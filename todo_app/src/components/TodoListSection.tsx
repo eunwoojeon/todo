@@ -23,8 +23,7 @@ const TodoListSection: React.FC = () => {
   const [editDesc, setEditDesc] = useRecoilState(editDescriptionState);
   useEventListener('refresh', async () => {
     axios
-      // .get('http://localhost:4000/todo', { withCredentials: true })
-      .get('http://www.toy-todo.store/todo', { withCredentials: true })
+      .get('http://localhost:4000/todo', { withCredentials: true })
       .then((res) => {
         setEditId('');
         setTodoList(res.data.todoList);
@@ -57,8 +56,7 @@ const TodoListSection: React.FC = () => {
   const deleteTodo = (e: React.SyntheticEvent<EventTarget>) => {
     const { id, ...rest } = getDataset(e);
     axios
-      // .delete('http://localhost:4000/todo', { params: { todoId: id }, withCredentials: true })
-      .delete('http://www.toy-todo.store/todo', { params: { todoId: id }, withCredentials: true })
+      .delete('http://localhost:4000/todo', { params: { todoId: id }, withCredentials: true })
       .then((res) => {
         refreshEvent(); // refresh list
       })
@@ -80,8 +78,7 @@ const TodoListSection: React.FC = () => {
       desc: editDesc
     }
     axios
-      // .post('http://localhost:4000/todo', body, { params: { case: 'update' }, withCredentials: true })
-      .post('http://www.toy-todo.store/todo', body, { params: { case: 'update' }, withCredentials: true })
+      .post('http://localhost:4000/todo', body, { params: { case: 'update' }, withCredentials: true })
       .then((res) => {
         refreshEvent(); // refresh list
       })
@@ -121,8 +118,7 @@ const TodoListSection: React.FC = () => {
       status: isCompleted
     }
     axios
-      // .post('http://localhost:4000/todo', body, { params: { case: 'status' }, withCredentials: true })
-      .post('http://www.toy-todo.store/todo', body, { params: { case: 'status' }, withCredentials: true })
+      .post('http://localhost:4000/todo', body, { params: { case: 'status' }, withCredentials: true })
       .then((res) => {
         refreshEvent(); // refresh list
       })
