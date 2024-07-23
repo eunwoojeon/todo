@@ -29,7 +29,7 @@ const TodoInputSection: React.FC = () => {
 
     axios
       // .post('http://localhost:4000/todo', body, { params: { case: 'create' }, withCredentials: true })
-      .post('https://www.toy-todo.store/todo', body, { params: { case: 'create' }, withCredentials: true })
+      .post(process.env.REACT_APP_API_URL + '/todo', body, { params: { case: 'create' }, withCredentials: true })
       .then((res) => {
         refreshEvent(); // refresh list
       })

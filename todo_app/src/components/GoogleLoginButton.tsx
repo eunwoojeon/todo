@@ -11,10 +11,11 @@ const GoogleLoginButton: React.FC<GoogleLoginButtonProps> = ({closeModal}) => {
   const checkSessionEvent = useDispatchEvent('sign-in-out');
 
   const request_login = async (token: string) => {
+    console.log(process.env.REACT_APP_API_URL);
     const body = { token: token };
     axios
       // .post('http://localhost:4000/user', body, { withCredentials: true })
-      .post('https://www.toy-todo.store/user', body, { withCredentials: true })
+      .post(process.env.REACT_APP_API_URL + '/user', body, { withCredentials: true })
       .then((res) => {
         setUser({ ...res.data.userData }) 
         closeModal();
@@ -32,9 +33,8 @@ const GoogleLoginButton: React.FC<GoogleLoginButtonProps> = ({closeModal}) => {
     <div>
       <GoogleLogin
         onSuccess={credentialResponse => {
-          // get jwt token
-          console.log(credentialResponse);
-          // login request
+          // 1 .get jwt token(credentialResponse) from google
+          // 2. login request
           if (credentialResponse.credential) {
             request_login(credentialResponse.credential);
           } else {

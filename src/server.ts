@@ -4,6 +4,7 @@ import express, { NextFunction, Request, Response } from "express";
 import path from "path";
 import bodyParser from "body-parser";
 import jwt from "jsonwebtoken";
+require('dotenv').config();
 
 import DatabaseManager from './db/databaseManager';
 
@@ -24,11 +25,11 @@ server.use(express.static(path.join(__dirname, "../todo_app/build")));
 server.use(bodyParser.json()); // node.js 모듈, request data의 body parse를 자동으로 실행
 // session
 server.use(session({
-  secret: '36484381A3ACF2C7F4D841CB1A5F2', // session id 암호화 키
+  secret: process.env.SESSION_KEY as string, // session id 암호화 키
   resave: false, // 세션의 변화가 없어도 재저장할 것인지
   saveUninitialized: false, // 세션 저장전 uninitialized 상태로 미리 저장할 것인지
   store: MongoStore.create({
-    mongoUrl: 'mongodb+srv://ewjeon:doiAwDjOHuSfDf4p@cluster0.vnq3j1u.mongodb.net/todo?retryWrites=true&w=majority&appName=Cluster0',
+    mongoUrl: process.env.MONGODB_URL as string,
   }), // 세션 저장소
   // cookie: { secure: false, maxAge: 1000 * 10}, // 10sec
   cookie: { secure: false, maxAge: (1000 * 60 * 60) * 24 * 365 }, // ms * sec * min * hour * day

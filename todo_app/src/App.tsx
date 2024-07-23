@@ -5,7 +5,7 @@ import { GoogleOAuthProvider } from '@react-oauth/google';
 import TodoApp from './pages/TodoApp';
 
 const App: React.FC = () => {
-  const CLIENT_ID = '98628226161-bv9dcmu3u2t0q92722868oumpnsntb7v.apps.googleusercontent.com';
+  const CLIENT_ID = process.env.REACT_APP_CLIENT_ID as string;
 
   return (
     <RecoilRoot>

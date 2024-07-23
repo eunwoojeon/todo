@@ -19,7 +19,7 @@ const TodoApp: React.FC = () => {
   const checkSessionAndFetchUser = async () => {
     await axios
       // .get('http://localhost:4000/checksession', { withCredentials: true })
-      .get('https://www.toy-todo.store/checksession', { withCredentials: true })
+      .get(process.env.REACT_APP_API_URL + '/checksession', { withCredentials: true })
       .then((res) => {
         if (res.data.isLogin) { // session is valid
           setUser({

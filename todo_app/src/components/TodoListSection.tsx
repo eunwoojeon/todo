@@ -24,7 +24,7 @@ const TodoListSection: React.FC = () => {
   useEventListener('refresh', async () => {
     axios
       // .get('http://localhost:4000/todo', { withCredentials: true })
-      .get('https://www.toy-todo.store/todo', { withCredentials: true })
+      .get(process.env.REACT_APP_API_URL + '/todo', { withCredentials: true })
       .then((res) => {
         setEditId('');
         setTodoList(res.data.todoList);
@@ -58,7 +58,7 @@ const TodoListSection: React.FC = () => {
     const { id, ...rest } = getDataset(e);
     axios
       // .delete('http://localhost:4000/todo', { params: { todoId: id }, withCredentials: true })
-      .delete('https://www.toy-todo.store/todo', { params: { todoId: id }, withCredentials: true })
+      .delete(process.env.REACT_APP_API_URL + '/todo', { params: { todoId: id }, withCredentials: true })
       .then((res) => {
         refreshEvent(); // refresh list
       })
@@ -81,7 +81,7 @@ const TodoListSection: React.FC = () => {
     }
     axios
       // .post('http://localhost:4000/todo', body, { params: { case: 'update' }, withCredentials: true })
-      .post('https://www.toy-todo.store/todo', body, { params: { case: 'update' }, withCredentials: true })
+      .post(process.env.REACT_APP_API_URL + '/todo', body, { params: { case: 'update' }, withCredentials: true })
       .then((res) => {
         refreshEvent(); // refresh list
       })
@@ -122,7 +122,7 @@ const TodoListSection: React.FC = () => {
     }
     axios
       // .post('http://localhost:4000/todo', body, { params: { case: 'status' }, withCredentials: true })
-      .post('https://www.toy-todo.store/todo', body, { params: { case: 'status' }, withCredentials: true })
+      .post(process.env.REACT_APP_API_URL + '/todo', body, { params: { case: 'status' }, withCredentials: true })
       .then((res) => {
         refreshEvent(); // refresh list
       })
