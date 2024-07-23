@@ -4,7 +4,7 @@ import useDispatchEvent from '../hooks/useDispatchEvent';
 import { todoDescriptionState, todoTitleState } from '../state/todoAtoms';
 import { Alert } from '../types/components';
 import CustomInput from './CustomInput';
-import './TodoInputSection.css';
+import { AddButton, InputSec } from './TodoInputSection.style';
 
 const TodoInputSection: React.FC = () => {
   const [todoTitle, setTodoTitle] = useRecoilState(todoTitleState);
@@ -47,11 +47,11 @@ const TodoInputSection: React.FC = () => {
   }
 
   return (
-    <div className='input-sec'>
+    <InputSec className='input-sec'>
       <CustomInput text={'제목'} recoilState={todoTitleState} />
       <CustomInput text={'할일'} recoilState={todoDescriptionState} />
-      <button className='add-btn' onClick={addTodo}>Add</button>
-    </div>
+      <AddButton onClick={addTodo}>Add</AddButton>
+    </InputSec>
   )
 }
 

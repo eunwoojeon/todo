@@ -1,16 +1,16 @@
 import axios from 'axios';
 import React from 'react';
 import { useRecoilState, useResetRecoilState } from 'recoil';
-import { AlertBanner, NavigatorBar, TodoInputSection, TodoListSection } from '../components';
+import styled, { ThemeProvider } from 'styled-components';
+import { NavigatorBar, TodoInputSection, TodoListSection } from '../components';
+import useDarkMode from '../hooks/useDarkMode';
 import useDispatchEvent from '../hooks/useDispatchEvent';
 import useEventListener from '../hooks/useEventListener';
 import { todoListState } from '../state/todoAtoms';
 import { userState } from '../state/userAtoms';
-import './TodoApp.css';
-import { ThemeProvider } from 'styled-components';
-import useDarkMode from '../hooks/useDarkMode';
-import { darkTheme, lightTheme } from '../style/theme';
 import GlobalStyles from '../style/globalStyles';
+import { darkTheme, lightTheme } from '../style/theme';
+import { Div, Title, Main } from './TodoApp.style';
 
 const TodoApp: React.FC = () => {
   const [user, setUser] = useRecoilState(userState);
@@ -66,16 +66,16 @@ const TodoApp: React.FC = () => {
   return (
     <ThemeProvider theme={isDarkMode ? darkTheme : lightTheme}>
       <GlobalStyles />
-      <div className='todoApp'>
-        <AlertBanner />
+      <Div className='todoApp'>
+        {/* <AlertBanner /> */}
         <NavigatorBar />
-        <div className='title title-font'>To-Do List</div>
-        <div className='main'>
+        <Title className='title-font'>To-Do List</Title>
+        <Main>
           <TodoInputSection />
           <hr />
           <TodoListSection />
-        </div>
-      </div>
+        </Main>
+      </Div>
     </ThemeProvider>
   )
 }

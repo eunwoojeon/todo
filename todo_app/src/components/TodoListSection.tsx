@@ -1,16 +1,14 @@
+import { faArrowsRotate, faCircleCheck, faPenToSquare, faTrash, faXmark } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
 import React from 'react';
 import { useRecoilState } from 'recoil';
 import useDispatchEvent from '../hooks/useDispatchEvent';
 import useEventListener from '../hooks/useEventListener';
 import { editDescriptionState, editIdState, editTitleState, todoListState } from '../state/todoAtoms';
+import { StyledFontAwesomeIcon } from '../style/common.style';
 import { Alert, TodoItem } from '../types/components';
 import CustomInput from './CustomInput';
-import './TodoListSection.css'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowsRotate, faCircleCheck, faXmark } from '@fortawesome/free-solid-svg-icons';
-import { faTrash } from '@fortawesome/free-solid-svg-icons';
-import { faPenToSquare } from '@fortawesome/free-solid-svg-icons';
+import { ButtonPanel, CheckBox, EditingPanel, Item, ListSec, OutputPanel, RefreshFontAwesomeIcon } from './TodoListSection.style';
 
 const TodoListSection: React.FC = () => {
   const [todoList, setTodoList] = useRecoilState(todoListState);
@@ -116,7 +114,7 @@ const TodoListSection: React.FC = () => {
       isCompleted = true;
     }
 
-    const body = { 
+    const body = {
       todoId: parentElement.dataset.id,
       status: isCompleted
     }
@@ -136,46 +134,52 @@ const TodoListSection: React.FC = () => {
   }
 
   return (
-    <div className='list-sec'>
-      <FontAwesomeIcon className='refresh-btn fontawesome' icon={faArrowsRotate} size="lg" onClick={() => { refreshEvent() }} />
+    <ListSec>
+      <RefreshFontAwesomeIcon icon={faArrowsRotate} size="lg" onClick={() => { refreshEvent() }} />
       <div>
         {todoList.map((todoItem: TodoItem, index: number) => (
-          <div className='item' key={index} data-id={todoItem._id} data-t={todoItem.title} data-d={todoItem.description} data-s={todoItem.status}>
+          <Item className='item' key={index} data-id={todoItem._id} data-t={todoItem.title} data-d={todoItem.description} data-s={todoItem.status}>
             {editId != todoItem._id ?
               <>
-                <input type='checkbox' onChange={checkedEvent} checked={todoItem.status === 'COMPLETE'}/>
-                <div className='read'>
+
+                <CheckBox type='checkbox' onChange={checkedEvent} checked={todoItem.status === 'COMPLETE'} />
+                <OutputPanel className='read'>
                   <span>{todoItem.title}</span>
                   <span>{todoItem.description}</span>
-                </div>
-                <div key={index}>
+                </OutputPanel>
+
+                <ButtonPanel key={index}>
                   <button onClick={editTodo}>
-                    <FontAwesomeIcon className='fontawesome' icon={faPenToSquare} size="lg" />
+                    <StyledFontAwesomeIcon icon={faPenToSquare} size="lg" />
                   </button>
                   <button onClick={deleteTodo}>
-                    <FontAwesomeIcon className='fontawesome' icon={faTrash} size="lg" />
+                    <StyledFontAwesomeIcon icon={faTrash} size="lg" />
                   </button>
-                </div>
+                </ButtonPanel>
+
               </> :
               <>
-                <div className='edit'>
+              
+                <EditingPanel className='edit'>
                   <CustomInput text={todoItem.title} recoilState={editTitleState} />
                   <CustomInput text={todoItem.description} recoilState={editDescriptionState} />
-                </div>
-                <div key={index}>
+                </EditingPanel>
+
+                <ButtonPanel key={index}>
                   <button onClick={updateTodo}>
-                    <FontAwesomeIcon className='fontawesome' icon={faCircleCheck} size="lg" />
+                    <StyledFontAwesomeIcon icon={faCircleCheck} size="lg" />
                   </button>
                   <button onClick={cancelTodo}>
-                    <FontAwesomeIcon className='fontawesome' icon={faXmark} size="lg" />
+                    <StyledFontAwesomeIcon icon={faXmark} size="lg" />
                   </button>
-                </div>
+                </ButtonPanel>
+
               </>
             }
-          </div>
+          </Item>
         ))}
       </div>
-    </div>
+    </ListSec>
   )
 }
 

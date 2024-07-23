@@ -1,13 +1,13 @@
 import { faMoon, faSun, faXmark } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axios from 'axios';
 import { useState } from "react";
 import Modal from 'react-modal';
 import { useRecoilState, useResetRecoilState } from "recoil";
 import { darkModeState } from '../state/common';
 import { userState } from "../state/userAtoms";
+import { StyledFontAwesomeIcon } from '../style/common.style';
 import GoogleLoginButton from './GoogleLoginButton';
-import './NavigatorBar.css';
+import { LoginButton, ModalButton, ModalButtonPanel, NaviBar, XmarkFontAwesomeIcon } from './NavigatorBar.style';
 
 const NavigatorBar: React.FC = () => {
   // modal window setting
@@ -72,37 +72,31 @@ const NavigatorBar: React.FC = () => {
   const [isDarkMode, setIsDarkMode] = useRecoilState(darkModeState);
 
   return (
-    <div className='navBar'>
-      {isDarkMode ? <FontAwesomeIcon className='fontawesome nav-btn' icon={faMoon} size="lg" onClick={() => { setIsDarkMode(false) }} /> : <FontAwesomeIcon className='fontawesome' icon={faSun} size="lg" onClick={() => { setIsDarkMode(true) }} />}
+    <NaviBar>
+      {isDarkMode ? <StyledFontAwesomeIcon icon={faMoon} size="lg" onClick={() => { setIsDarkMode(false) }} /> : <StyledFontAwesomeIcon icon={faSun} size="lg" onClick={() => { setIsDarkMode(true) }} />}
       {user.isLogin ?
         <>
-          <button className='nav-btn login-btn eng-font' onClick={openModal}>Log Out</button>
+          <LoginButton className='eng-font' onClick={openModal}>Log Out</LoginButton>
           <Modal isOpen={isOpen} onRequestClose={closeModal} style={customStyles} ariaHideApp={false}>
-            <FontAwesomeIcon icon={faXmark} size="lg" onClick={closeModal} style={{
-              position: 'absolute',
-              right: '1.2rem'
-            }} />
+            <XmarkFontAwesomeIcon icon={faXmark} size="lg" onClick={closeModal} />
             <h1 className='eng-font'>Log Out</h1>
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-              <button className='modal-btn eng-font' onClick={logout}>Log Out</button>
-              <button className='modal-btn eng-font' onClick={deleteUser}>사용자 정보 삭제/탈퇴하기</button>
-            </div>
+            <ModalButtonPanel>
+              <ModalButton className='eng-font' onClick={logout}>Log Out</ModalButton>
+              <ModalButton className='eng-font' onClick={deleteUser}>사용자 정보 삭제/탈퇴하기</ModalButton>
+            </ModalButtonPanel>
           </Modal>
         </> :
         <>
-          <button className='nav-btn login-btn eng-font' onClick={openModal}>Log In</button>
+          <LoginButton className='eng-font' onClick={openModal}>Log In</LoginButton>
           <Modal isOpen={isOpen} onRequestClose={closeModal} style={customStyles} ariaHideApp={false}>
-            <FontAwesomeIcon icon={faXmark} size="lg" onClick={closeModal} style={{
-              position: 'absolute',
-              right: '1.2rem'
-            }} />
+            <XmarkFontAwesomeIcon icon={faXmark} size="lg" onClick={closeModal} />
             <h1 className='eng-font'>Log In</h1>
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <ModalButtonPanel>
               <GoogleLoginButton closeModal={() => { setIsOpen(false) }} />
-            </div>
+            </ModalButtonPanel>
           </Modal>
         </>}
-    </div>
+    </NaviBar>
   )
 }
 
