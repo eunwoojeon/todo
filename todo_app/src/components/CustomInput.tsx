@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import { CustomInputProps } from '../types/components';
-import './CustomInput.css';
-import useInput from '../hooks/useInput';
 import { Buffer } from 'buffer';
+import React, { useState } from 'react';
+import useInput from '../hooks/useInput';
+import { CustomInputProps } from '../types/components';
+import { TodoInput } from './CustomInput.style';
 
 const CustomInput: React.FC<CustomInputProps> = ({ text, recoilState }) => {
   const maxByte = 60;
@@ -15,9 +15,9 @@ const CustomInput: React.FC<CustomInputProps> = ({ text, recoilState }) => {
 
   const getByteLengthOfString = (str: string) => {
     const byteLength = Buffer.byteLength(str, 'utf-8');
-    if (maxByte >= byteLength) { 
+    if (maxByte >= byteLength) {
       setByte(byteLength);
-      return true 
+      return true
     }
     return false;
   }
@@ -25,10 +25,10 @@ const CustomInput: React.FC<CustomInputProps> = ({ text, recoilState }) => {
   const value = useInput(recoilState, getByteLengthOfString);
 
   return (
-    <div className='custom-input'>
+    <TodoInput className='custom-input'>
       <input type="text" {...value} placeholder={text} />
-      <span className='byte_displayer'>{byte}/{maxByte} byte</span>
-    </div>
+      <span>{byte}/{maxByte} byte</span>
+    </TodoInput>
   )
 }
 

@@ -1,59 +1,107 @@
 import { createGlobalStyle } from 'styled-components';
 
 const GlobalStyles = createGlobalStyle`
-  .todoApp {
-    background-color: ${props => props.theme.bgColor};
-    color: ${props => props.theme.textColor};
+  /* global css */
+  #root {
+    width: 100vw;
+    height: 100vh;
   }
 
-  .main > hr {
-    border: 1px solid ${props => props.theme.hrBorderColor};
+  * {
+    /*opera*/
+    box-sizing: border-box;
+    /*firefox*/
+    -moz-box-sizing: border-box;
+    /*webkit chrome*/
+    -webkit-box-sizing: border-box;
+    font-family: Noto Sans KR, Pretendard, sans-serif;
+    /* 줄바뀜 제거 */
+    white-space: nowrap;
   }
 
-  .item:has(.read) {
-    background-color: ${props => props.theme.listBgColor};
+  .title-font {
+    font-family: Oleo Script;
   }
 
-  .add-btn {
-    background-color: ${props => props.theme.addBgColor};
-    color: ${props => props.theme.textColor};
+  .eng-font {
+    font-family: Roboto;
   }
 
-  .login-btn {
-    background-color: ${props => props.theme.loginBgColor};
-    color: ${props => props.theme.loginTextColor};
+  button {
+    border: 0;
+    cursor: pointer;
+    background-color: transparent;
   }
 
-  .modal-btn {
-    background-color: ${props => props.theme.modalBtnBgColor};
-    &:hover {
-      background-color: ${props => props.theme.modalBtnBgColorHover};
+  input {
+    border: none;
+    outline: none;
+    background-color: transparent;
+  }
+
+  /* structure css */
+  @media screen and (max-width: 768px) {
+    body {
+      min-width: 300px;
+    }
+
+    :root {
+      --inputsec-margin: 50px;
+      --input-right-margin: 1rem;
+      --input-left-padding: 0.4rem;
+      --list-vertical-margin: 1.25rem;
+      --item-horizontal-padding: 1rem;
+
+      /* input width = (main width - 6rem) / 2 */
+      --main-width: 500px;
+      --input-width: 202px;
+      --input-height: 4.5rem;
+      --input-rel-top: 1.5rem;
+      --list-height: 4.5rem;
+      --item_span-width: 350px;
+
+      --byte_displayer-ft-size: 0.8rem;
     }
   }
 
-  .custom-input {
-    border: 2px solid ${props => props.theme.inputBgColor};
-    background-color: ${props => props.theme.inputBgColor};
+  @media screen and (min-width: 769px) and (max-width: 1024px) {
+    :root {
+      --inputsec-margin: 50px;
+      --input-right-margin: 1rem;
+      --input-left-padding: 0.4rem;
+      --list-vertical-margin: 1.25rem;
+      --item-horizontal-padding: 1rem;
 
-    &:hover {
-      border: 2px solid ${props => props.theme.inputBgColorHover};
+      /* input width = (main width - 6rem) / 2 */
+      --main-width: 600px;
+      --input-width: 252px;
+      --input-height: 4.5rem;
+      --input-rel-top: 1.5rem;
+      --list-height: 4.5rem;
+      --item_span-width: 450px;
+
+      --byte_displayer-ft-size: 0.8rem;
     }
   }
 
-  .custom-input>input {
-    color: ${props => props.theme.textColor};
+  @media screen and (min-width: 1025px) {
+    :root {
+      --inputsec-margin: 50px;
+      --input-right-margin: 1rem;
+      --input-left-padding: 0.4rem;
+      --list-vertical-margin: 1.25rem;
+      --item-horizontal-padding: 1rem;
 
-    &::placeholder {
-      color: ${props => props.theme.placeHolderTextColor};
+      /* input width = (main width - 6rem) / 2 */
+      --main-width: 800px;
+      --input-width: 352px;
+      --input-height: 4.5rem;
+      --input-rel-top: 1.5rem;
+      --list-height: 4.5rem;
+      --item_span-width: 650px;
+
+      --byte_displayer-ft-size: 0.8rem;
     }
-  }
-
-  .custom-input>.byte_displayer {
-    color: ${props => props.theme.placeHolderTextColor};
-  }
-
-  .fontawesome {
-    color: ${props => props.theme.fontAwesome};
   }
 `;
 

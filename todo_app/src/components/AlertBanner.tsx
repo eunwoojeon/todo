@@ -3,7 +3,7 @@ import { useRecoilState } from 'recoil';
 import useEventListener from '../hooks/useEventListener';
 import { alertState } from '../state/common';
 import { Alert } from '../types/components';
-import './AlertBanner.css';
+import { Banner } from './AlertBanner.style';
 
 const AlertBanner: React.FC = () => {
   const [alert, setAlert] = useRecoilState(alertState);
@@ -27,10 +27,10 @@ const AlertBanner: React.FC = () => {
   return (
     <>
       {alert.alertIsActive ?
-        <div className='banner'>
+        <Banner>
           <span>{alert.alertText}</span>
           <button onClick={closeAlert}>x</button>
-        </div>
+        </Banner>
         : <></>}
     </>
   )
