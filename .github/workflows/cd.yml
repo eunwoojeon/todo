@@ -70,8 +70,8 @@ jobs:
       run: |
         echo "$SSH_PRIVATE_KEY" > private_key.pem
         chmod 600 private_key.pem
-        scp -i private_key.pem -r ./* $EC2_USER@EC2_HOST:/repositories
-        ssh -i private_key.pem $EC2_USER@E$EC2_HOST << 'EOF'
+        scp -i private_key.pem -r ./* $EC2_USER@$EC2_HOST:/repositories
+        ssh -i private_key.pem $EC2_USER@$EC2_HOST << 'EOF'
           cd /repositories
           npm install --production
           pm2 restart all || pm2 start 'npm run running'
