@@ -41,39 +41,61 @@ jobs:
         node-version: [20.x]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
-    # steps:
-    # - name: Checkout
-    #   uses: actions/checkout@v4
-    #   with:
-    #     ref: main
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        ref: main
 
-    # - name: Use Node.js ${{ matrix.node-version }}
-    #   uses: actions/setup-node@v3
-    #   with:
-    #     node-version: ${{ matrix.node-version }}
-    #     cache: 'npm'
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
 
-    # - name: Install dependencies and Build project
-    #   run: |
-    #     cd todo_app
-    #     npm install
-    #     CI='false' npm run build
-    #     cd ..
-    #     npm install
-    #     npm run build
+    - name: Environment set - todo
+      working-directory: ./
+      run: |
+        touch .env
+        echo -e "SESSION_KEY=${{ secrets.SESSION_KEY }}\nMONGODB_URL=${{ secrets.MONGODB_URL }}" >> .env
+        cat .env
 
-    # - name: Deploy to EC2
-    #   env:
-    #     EC2_HOST: ${{ secrets.EC2_HOST }}
-    #     EC2_USER: ${{ secrets.EC2_USER }}
-    #     SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-    #   run: |
-    #     echo "$SSH_PRIVATE_KEY" > private_key.pem
-    #     chmod 600 private_key.pem
-    #     scp -i private_key.pem -r ./* $EC2_USER@$EC2_HOST:/repositories
-    #     ssh -i private_key.pem $EC2_USER@$EC2_HOST << 'EOF'
-    #       cd /repositories
-    #       npm install
-    #       pm2 restart all || pm2 start 'npm run running'
-    #     EOF
+    - name: Environment set - todo_app
+      working-directory: ./todo_app/
+      run: |
+        touch .env
+        echo -e "REACT_APP_CLIENT_ID=${{ secrets.REACT_APP_CLIENT_ID }}" >> .env
+        cat .env
+        
+    - name: Install dependencies and Build project - todo
+      working-directory: ./
+      run: |
+        npm install
+        npm run build
+
+    - name: Install dependencies and Build project - todo_app
+      working-directory: ./todo_app/
+      run: |
+        npm install
+        CI='false' npm run build
+
+    - name: Excute zip
+      run: zip -r todo.zip ./dist ./script ./appspec.yml ./.env ./package.json ./todo_app -x */node_modules/*
+
+    - name: Access AWS
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ap-northeast-2
+
+    - name: Upload zip file to s3
+      run: aws s3 cp --region ap-northeast-2 ./todo.zip s3://todoapp-deploy-bucket/deploy/
+
+    - name: 🚀 AWS codeDeploy로 배포를 시작
+      run: aws deploy create-deployment
+        --application-name todoapp-codedeploy
+        --deployment-config-name CodeDeployDefault.OneAtATime
+        --deployment-group-name production
+        --s3-location bucket=todoapp-deploy-bucket,bundleType=zip,key=deploy/todo.zip
         
