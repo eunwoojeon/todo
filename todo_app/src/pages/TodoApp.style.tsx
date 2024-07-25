@@ -23,7 +23,7 @@ const Main = styled.div`
 
   >hr {
     align-self: stretch;
-    width: 100%;
+    width: var(--hr-width);
     border: 1px solid ${props => props.theme.hrBorderColor};
   }
 `;

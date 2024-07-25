@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 const TodoInput = styled.div`
-  width: var(--input-width);
+  flex-grow: 1;
   height: var(--input-height);
   margin-right: var(--input-right-margin);
   padding-left: var(--input-left-padding);
@@ -27,7 +27,7 @@ const TodoInput = styled.div`
 
   &>span {
     position: relative;
-    top: 3rem;
+    top: var(--byte_display-top);
     right: 5rem;
 
     font-size: var(--byte_displayer-ft-size);

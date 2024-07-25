@@ -8,7 +8,7 @@ import { editDescriptionState, editIdState, editTitleState, todoListState } from
 import { StyledFontAwesomeIcon } from '../style/common.style';
 import { Alert, TodoItem } from '../types/components';
 import CustomInput from './CustomInput';
-import { ButtonPanel, CheckBox, EditingPanel, Item, ListSec, OutputPanel, RefreshFontAwesomeIcon } from './TodoListSection.style';
+import { ButtonPanel, CheckBox, Item, ListSec, OutputPanel, RefreshFontAwesomeIcon } from './TodoListSection.style';
 
 const TodoListSection: React.FC = () => {
   const [todoList, setTodoList] = useRecoilState(todoListState);
@@ -160,10 +160,8 @@ const TodoListSection: React.FC = () => {
               </> :
               <>
               
-                <EditingPanel className='edit'>
-                  <CustomInput text={todoItem.title} recoilState={editTitleState} />
-                  <CustomInput text={todoItem.description} recoilState={editDescriptionState} />
-                </EditingPanel>
+                <CustomInput text={todoItem.title} recoilState={editTitleState} />
+                <CustomInput text={todoItem.description} recoilState={editDescriptionState} />
 
                 <ButtonPanel key={index}>
                   <button onClick={updateTodo}>

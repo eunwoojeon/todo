@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 const InputSec = styled.div`
   width: var(--main-width);
-  margin: var(--inputsec-margin) 0 var(--inputsec-margin) 0;
+  margin: var(--main-margin) 0 var(--main-margin) 0;
 
   display: flex;
   flex-direction: row;
@@ -11,9 +11,11 @@ const InputSec = styled.div`
 `;
 
 const AddButton = styled.button`
-  width: 4rem;
-  height: 4rem;
-  border-radius: 2rem;
+  flex-grow: 0;
+  flex-shrink: 0;
+  width: var(--button-length);
+  height: var(--button-length);
+  border-radius: calc(var(--button-length)/2);
 
   font-size: 1.1rem;
   font-weight: bold;

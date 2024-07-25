@@ -2,9 +2,15 @@ import { createGlobalStyle } from 'styled-components';
 
 const GlobalStyles = createGlobalStyle`
   /* global css */
-  #root {
+  body {
     width: 100vw;
     height: 100vh;
+    min-width: 300px;
+  }
+
+  #root {
+    width: 100%;
+    height: 100%;
   }
 
   * {
@@ -41,65 +47,94 @@ const GlobalStyles = createGlobalStyle`
 
   /* structure css */
   @media screen and (max-width: 768px) {
-    body {
-      min-width: 300px;
-    }
-
     :root {
-      --inputsec-margin: 50px;
+      /* todo main */
+      --main-width: 95vw;
+      --main-min-width: 300px;
+      --main-margin: 1.5rem;
+
+      /* todo input */
+      --input-width: 40%;
+      --input-height: 4rem;
+      --button-length: 4rem;
+      --input-rel-top: 1.25rem;
       --input-right-margin: 1rem;
       --input-left-padding: 0.4rem;
-      --list-vertical-margin: 1.25rem;
+      --byte_display-top: 2.5rem;
+
+      /* hr */
+      --hr-width: 100%;
+
+      /* todo item */
+      --item-width: 95vw;
+      --item-height: 4.5rem;
+      --item-vertical-margin: 1.25rem;
       --item-horizontal-padding: 1rem;
+      --item_span-width: auto;
 
-      /* input width = (main width - 6rem) / 2 */
-      --main-width: 500px;
-      --input-width: 202px;
-      --input-height: 4.5rem;
-      --input-rel-top: 1.5rem;
-      --list-height: 4.5rem;
-      --item_span-width: 350px;
-
+      /* font-size */
       --byte_displayer-ft-size: 0.8rem;
     }
   }
 
   @media screen and (min-width: 769px) and (max-width: 1024px) {
     :root {
-      --inputsec-margin: 50px;
-      --input-right-margin: 1rem;
-      --input-left-padding: 0.4rem;
-      --list-vertical-margin: 1.25rem;
-      --item-horizontal-padding: 1rem;
-
-      /* input width = (main width - 6rem) / 2 */
+      /* todo main */
       --main-width: 600px;
+      --main-min-width: 300px;
+      --main-margin: 50px;
+
+      /* todo input */
       --input-width: 252px;
       --input-height: 4.5rem;
+      --button-length: 4.5rem;
       --input-rel-top: 1.5rem;
-      --list-height: 4.5rem;
-      --item_span-width: 450px;
+      --input-right-margin: 1rem;
+      --input-left-padding: 0.4rem;
+      --byte_display-top: 3rem;
 
+      /* hr */
+      --hr-width: 100%;
+
+      /* todo item */
+      --item-width: 600px;
+      --item-height: 4.5rem;
+      --item-vertical-margin: 1.25rem;
+      --item-horizontal-padding: 1rem;
+      --item_span-width: auto;
+
+      /* font-size */
       --byte_displayer-ft-size: 0.8rem;
     }
   }
 
   @media screen and (min-width: 1025px) {
     :root {
-      --inputsec-margin: 50px;
-      --input-right-margin: 1rem;
-      --input-left-padding: 0.4rem;
-      --list-vertical-margin: 1.25rem;
-      --item-horizontal-padding: 1rem;
-
-      /* input width = (main width - 6rem) / 2 */
+      /* todo main */
       --main-width: 800px;
+      --main-min-width: 300px;
+      --main-margin: 50px;
+
+      /* todo input */
       --input-width: 352px;
       --input-height: 4.5rem;
+      --button-length: 4.5rem;
       --input-rel-top: 1.5rem;
-      --list-height: 4.5rem;
-      --item_span-width: 650px;
+      --input-right-margin: 1rem;
+      --input-left-padding: 0.4rem;
+      --byte_display-top: 3rem;
 
+      /* hr */
+      --hr-width: 100%;
+
+      /* todo item */
+      --item-width: 800px;
+      --item-height: 4.5rem;
+      --item-vertical-margin: 1.25rem;
+      --item-horizontal-padding: 1rem;
+      --item_span-width: auto;
+
+      /* font-size */
       --byte_displayer-ft-size: 0.8rem;
     }
   }

@@ -11,9 +11,9 @@ const RefreshFontAwesomeIcon = styled(StyledFontAwesomeIcon)`
 `;
 
 const Item = styled.div`
-  width: var(--main-width);
-  height: var(--list-height);
-  margin: var(--list-vertical-margin) 0 var(--list-vertical-margin) 0;
+  width: var(--item-width);
+  height: var(--item-height);
+  margin: var(--item-vertical-margin) 0 var(--item-vertical-margin) 0;
 
   display: flex;
   flex-direction: row;
@@ -34,6 +34,7 @@ const Item = styled.div`
 `;
 
 const CheckBox = styled.input`
+  flex-shrink: 0;
   position: relative;
   width: 28px;
   height: 28px;
@@ -72,9 +73,14 @@ const CheckBox = styled.input`
 `;
 
 const OutputPanel = styled.div`
+  flex-grow: 1;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
+  margin: 0 0 0 1rem;
+
+  white-space: wrap;
+  overflow: hidden;
 
   :first-child {
     font-size: 1.5rem;
@@ -88,13 +94,10 @@ const OutputPanel = styled.div`
   }
 `;
 
-const EditingPanel = styled.div`
-  display: flex;
-  flex-direction: row;
-`;
-
 const ButtonPanel = styled.div`
-  width: 4rem;
+  flex-grow: 0;
+  flex-shrink: 0;
+  width: var(--button-length);
 
   display: flex;
   flex-direction: row;
@@ -102,4 +105,4 @@ const ButtonPanel = styled.div`
   justify-content: space-between;
 `;
 
-export { ListSec, RefreshFontAwesomeIcon, Item, CheckBox, OutputPanel, EditingPanel, ButtonPanel };
+export { ListSec, RefreshFontAwesomeIcon, Item, CheckBox, OutputPanel, ButtonPanel };
