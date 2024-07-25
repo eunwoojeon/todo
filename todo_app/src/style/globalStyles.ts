@@ -2,17 +2,21 @@ import { createGlobalStyle } from 'styled-components';
 
 const GlobalStyles = createGlobalStyle`
   /* global css */
-  body {
-    width: 100vw;
-    height: 100vh;
+  html, body, #root {
+    width: 100%;
+    height: 100%;
     min-width: 300px;
   }
 
-  #root {
-    width: 100%;
-    height: 100%;
+  /* 드래그 금지 */
+  * {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-use-select: none;
+    user-select: none;
   }
 
+  /* box-sizing */
   * {
     /*opera*/
     box-sizing: border-box;
@@ -25,6 +29,7 @@ const GlobalStyles = createGlobalStyle`
     white-space: nowrap;
   }
 
+  /* font */
   .title-font {
     font-family: Oleo Script;
   }
@@ -45,7 +50,7 @@ const GlobalStyles = createGlobalStyle`
     background-color: transparent;
   }
 
-  /* structure css */
+  /* media query */
   @media screen and (max-width: 768px) {
     :root {
       /* todo main */

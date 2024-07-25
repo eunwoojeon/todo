@@ -91,6 +91,11 @@ const OutputPanel = styled.div`
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    -ms-use-select: text;
+    user-select: text;
   }
 `;
 
