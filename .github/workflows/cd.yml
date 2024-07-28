@@ -80,7 +80,7 @@ jobs:
         CI='false' npm run build
 
     - name: Excute zip
-      run: zip -r todo.zip ./dist ./script ./appspec.yml ./.env ./package.json ./todo_app -x */node_modules/*
+      run: zip -r todo.zip ./dist ./scripts ./appspec.yml ./.env ./package.json ./todo_app -x */node_modules/*
 
     - name: Access AWS
       uses: aws-actions/configure-aws-credentials@v1
