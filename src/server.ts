@@ -84,7 +84,7 @@ server.route('/user')
   .post(async (req: Request, res: Response) => {
     const decodedToken = jwt.decode(req.body.token) as GoogleToken;
     await dbmanager
-      .saveUser(decodedToken.sub, decodedToken.email, 'GOOGLE', decodedToken.name, decodedToken.picture)
+      .saveUser(decodedToken.email, 'GOOGLE', decodedToken.name, decodedToken.picture)
       .then((result) => {
         req.session.email = result.userData.email;
         req.session.userId = result.userData._id;

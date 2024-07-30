@@ -2,11 +2,6 @@ import mongoose, { Schema } from "mongoose";
 const { ObjectId } = Schema.Types;
 
 const userSchema = new mongoose.Schema({
-  sub_id: {
-    type: String,
-    required: true,
-    unique: true
-  },
   email: {
     type: String,
     required: true,

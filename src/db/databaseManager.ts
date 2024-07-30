@@ -45,10 +45,9 @@ export default class DatabaseManager {
   }
 
   //#region user
-  async saveUser(sub_id: string, email: string, sns_type: SNS_TYPE, name: string, picture: string) {
-    const filter = { sub_id: sub_id };
+  async saveUser(email: string, sns_type: SNS_TYPE, name: string, picture: string) {
+    const filter = { email: email };
     const update = {
-      email: email,
       sns_type: sns_type,
       name: name,
       picture: picture
@@ -75,8 +74,8 @@ export default class DatabaseManager {
     }
   }
 
-  async findOneUser(sub_id: string) {
-    const result = await UserModel.findOne({ sub_id: sub_id }).exec();
+  async findOneUser(email: string) {
+    const result = await UserModel.findOne({ email: email }).exec();
     if (null !== result) {
       return {
         msg: 'USER] Save find successfully',
