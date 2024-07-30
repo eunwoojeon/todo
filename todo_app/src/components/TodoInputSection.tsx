@@ -5,8 +5,10 @@ import { todoDescriptionState, todoTitleState } from '../state/todoAtoms';
 import { Alert } from '../types/components';
 import CustomInput from './CustomInput';
 import { AddButton, InputSec } from './TodoInputSection.style';
+import { userState } from '../state/userAtoms';
 
 const TodoInputSection: React.FC = () => {
+  const [user, SetUser] = useRecoilState(userState);
   const [todoTitle, setTodoTitle] = useRecoilState(todoTitleState);
   const [todoDesc, setTodoDesc] = useRecoilState(todoDescriptionState);
   const refreshEvent = useDispatchEvent('refresh');
@@ -18,7 +20,12 @@ const TodoInputSection: React.FC = () => {
   // todo save request
   const addTodo = async () => {
     if (!todoTitle || !todoDesc) {
-      alert('제목과 할일을 입력해 주세요.');
+      alert('Title과 Description을 입력해 주세요.');
+      return;
+    }
+
+    if (!user.isLogin) {
+      alert('로그인이 필요합니다.');
       return;
     }
 
