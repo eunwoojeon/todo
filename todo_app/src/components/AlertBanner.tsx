@@ -8,7 +8,6 @@ import { Banner } from './AlertBanner.style';
 const AlertBanner: React.FC = () => {
   const [alert, setAlert] = useRecoilState(alertState);
   useEventListener('alert', (e) => {
-    console.trace('alert!');
     const event = e as CustomEvent<Alert>;
     setAlert({
       alertIsActive: event.detail.alertIsActive,

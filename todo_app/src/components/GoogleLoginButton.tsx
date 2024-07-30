@@ -6,19 +6,17 @@ import useDispatchEvent from '../hooks/useDispatchEvent';
 import { userState } from '../state/userAtoms';
 import { GoogleLoginButtonProps } from "../types/components";
 
-const GoogleLoginButton: React.FC<GoogleLoginButtonProps> = ({closeModal}) => {
+const GoogleLoginButton: React.FC<GoogleLoginButtonProps> = ({ closeModal }) => {
   const [user, setUser] = useRecoilState(userState);
   const checkSessionEvent = useDispatchEvent('sign-in-out');
 
   const request_login = async (token: string) => {
-    console.log(process.env.REACT_APP_API_URL);
     const body = { token: token };
     axios
       // .post('http://localhost:4000/user', body, { withCredentials: true })
       .post(process.env.REACT_APP_API_URL + '/user', body, { withCredentials: true })
       .then((res) => {
-        setUser({ ...res.data.userData }) 
-        closeModal();
+        setUser({ ...res.data.userData });
         checkSessionEvent();
       })
       // login 동기화
@@ -26,7 +24,8 @@ const GoogleLoginButton: React.FC<GoogleLoginButtonProps> = ({closeModal}) => {
       //   localStorage.setItem('todo-login-key', 'true');
       //   window.dispatchEvent(new Event('storage'));
       // })
-      .catch(console.error);
+      .catch(console.error)
+      .finally(closeModal());
   }
 
   return (

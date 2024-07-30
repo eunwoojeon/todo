@@ -37,7 +37,6 @@ const NavigatorBar: React.FC = () => {
       .get(process.env.REACT_APP_API_URL + '/user', { withCredentials: true })
       .then((res) => {
         resetUser();
-        setIsOpen(false);
       })
       // login 동기화
       // .then(() => {
@@ -45,7 +44,10 @@ const NavigatorBar: React.FC = () => {
       //   window.dispatchEvent(new Event('storage'));
       // })
       .catch(console.error)
-      .finally(() => { window.location.reload() }) // 새로고침
+      .finally(() => { 
+        setIsOpen(false);
+        window.location.reload();
+      }) // 새로고침
   }
 
   const deleteUser = async () => {
@@ -54,9 +56,7 @@ const NavigatorBar: React.FC = () => {
         // .delete('http://localhost:4000/user', { withCredentials: true })
         .delete(process.env.REACT_APP_API_URL + '/user', { withCredentials: true })
         .then((res) => {
-          console.log('성공');
           resetUser();
-          setIsOpen(false);
         })
         // login 동기화
         // .then(() => {
@@ -64,7 +64,10 @@ const NavigatorBar: React.FC = () => {
         //   window.dispatchEvent(new Event('storage'));
         // })
         .catch(console.error)
-        .finally(() => { window.location.reload() }) // 새로고침
+        .finally(() => { 
+          setIsOpen(false);
+          window.location.reload();
+        }) // 새로고침
     }
   }
 
