@@ -159,7 +159,7 @@ const TodoListSection: React.FC = () => {
 
               </> :
               <>
-              
+
                 <CustomInput text={todoItem.title} recoilState={editTitleState} />
                 <CustomInput text={todoItem.description} recoilState={editDescriptionState} />
 

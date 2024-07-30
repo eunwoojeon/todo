@@ -1,0 +1,1 @@
+export type THEME = 'AUTO' | 'DARK' | 'LIGHT';

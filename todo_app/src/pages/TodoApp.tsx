@@ -1,19 +1,20 @@
 import axios from 'axios';
 import React from 'react';
-import { useRecoilState, useResetRecoilState } from 'recoil';
-import styled, { ThemeProvider } from 'styled-components';
+import { useRecoilValue, useResetRecoilState, useSetRecoilState } from 'recoil';
+import { ThemeProvider } from 'styled-components';
 import { NavigatorBar, TodoInputSection, TodoListSection } from '../components';
 import useDarkMode from '../hooks/useDarkMode';
 import useDispatchEvent from '../hooks/useDispatchEvent';
 import useEventListener from '../hooks/useEventListener';
+import { themeState } from '../state/common';
 import { todoListState } from '../state/todoAtoms';
 import { userState } from '../state/userAtoms';
 import GlobalStyles from '../style/globalStyles';
-import { darkTheme, lightTheme } from '../style/theme';
-import { Div, Title, Main } from './TodoApp.style';
+import themes from '../style/themes';
+import { Div, Main, Title } from './TodoApp.style';
 
 const TodoApp: React.FC = () => {
-  const [user, setUser] = useRecoilState(userState);
+  const setUser = useSetRecoilState(userState);
   const refreshEvent = useDispatchEvent('refresh');
   const resetList = useResetRecoilState(todoListState);
   const checkSessionAndFetchUser = async () => {
@@ -60,11 +61,13 @@ const TodoApp: React.FC = () => {
   //   }
   // );
 
-  // dark mode
-  const [isDarkMode, setIsDarkMode] = useDarkMode();
+  // appling theme
+  const isDarkMode = useDarkMode();
+  const theme = useRecoilValue(themeState);
+  const currentTheme = theme === 'AUTO' ? (isDarkMode ? themes['DARK'] : themes['LIGHT']) : themes[theme];
 
   return (
-    <ThemeProvider theme={isDarkMode ? darkTheme : lightTheme}>
+    <ThemeProvider theme={currentTheme}>
       <GlobalStyles />
       <Div className='todoApp'>
         {/* <AlertBanner /> */}

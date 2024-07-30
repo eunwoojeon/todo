@@ -1,13 +1,21 @@
-import { faMoon, faSun, faXmark } from '@fortawesome/free-solid-svg-icons';
+import { faAdjust, faMoon, faSun, faXmark, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Modal from 'react-modal';
-import { useRecoilState, useResetRecoilState } from "recoil";
-import { darkModeState } from '../state/common';
+import { useRecoilState, useRecoilValue, useResetRecoilState } from "recoil";
+import { themeState } from '../state/common';
 import { userState } from "../state/userAtoms";
 import { StyledFontAwesomeIcon } from '../style/common.style';
+import { THEME } from '../types/common';
 import GoogleLoginButton from './GoogleLoginButton';
 import { LoginButton, ModalButton, ModalButtonPanel, NaviBar, XmarkFontAwesomeIcon } from './NavigatorBar.style';
+
+const themes: THEME[] = ['AUTO', 'DARK', 'LIGHT'];
+const icons: Record<THEME, IconDefinition> = {
+  'AUTO': faAdjust,
+  'DARK': faMoon,
+  'LIGHT': faSun
+};
 
 const NavigatorBar: React.FC = () => {
   // modal window setting
@@ -29,7 +37,7 @@ const NavigatorBar: React.FC = () => {
   }
 
   // logout request
-  const [user, setUser] = useRecoilState(userState);
+  const user = useRecoilValue(userState);
   const resetUser = useResetRecoilState(userState);
   const logout = async () => {
     axios
@@ -44,7 +52,7 @@ const NavigatorBar: React.FC = () => {
       //   window.dispatchEvent(new Event('storage'));
       // })
       .catch(console.error)
-      .finally(() => { 
+      .finally(() => {
         setIsOpen(false);
         window.location.reload();
       }) // 새로고침
@@ -64,19 +72,29 @@ const NavigatorBar: React.FC = () => {
         //   window.dispatchEvent(new Event('storage'));
         // })
         .catch(console.error)
-        .finally(() => { 
+        .finally(() => {
           setIsOpen(false);
           window.location.reload();
         }) // 새로고침
     }
   }
 
-  // dark mode
-  const [isDarkMode, setIsDarkMode] = useRecoilState(darkModeState);
+  // switching theme
+  const [theme, setTheme] = useRecoilState(themeState);
+
+  useEffect(() => {
+    window.localStorage.setItem('theme', theme);
+  }, [theme]);
+
+  const cycleTheme = () => {
+    const currentIndex = themes.indexOf(theme);
+    const nextIndex = (currentIndex + 1) % themes.length;
+    setTheme(themes[nextIndex]);
+  }
 
   return (
     <NaviBar>
-      {isDarkMode ? <StyledFontAwesomeIcon icon={faMoon} size="lg" onClick={() => { setIsDarkMode(false) }} /> : <StyledFontAwesomeIcon icon={faSun} size="lg" onClick={() => { setIsDarkMode(true) }} />}
+      <StyledFontAwesomeIcon icon={icons[theme]} onClick={cycleTheme} size="lg" />
       {user.isLogin ?
         <>
           <LoginButton className='eng-font' onClick={openModal}>Log Out</LoginButton>

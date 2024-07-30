@@ -1,13 +1,13 @@
 import { GoogleLogin } from "@react-oauth/google";
 import axios from 'axios';
 import React from 'react';
-import { useRecoilState } from 'recoil';
+import { useSetRecoilState } from 'recoil';
 import useDispatchEvent from '../hooks/useDispatchEvent';
 import { userState } from '../state/userAtoms';
 import { GoogleLoginButtonProps } from "../types/components";
 
 const GoogleLoginButton: React.FC<GoogleLoginButtonProps> = ({ closeModal }) => {
-  const [user, setUser] = useRecoilState(userState);
+  const setUser = useSetRecoilState(userState);
   const checkSessionEvent = useDispatchEvent('sign-in-out');
 
   const request_login = async (token: string) => {

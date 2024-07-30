@@ -1,9 +1,7 @@
 import { useEffect, useState } from "react";
-import { useRecoilState } from "recoil";
-import { darkModeState } from "../state/common";
 
 const useDarkMode = () => {
-  const [isDarkMode, setIsDarkMode] = useRecoilState(darkModeState);
+  const [isDarkMode, setIsDarkMode] = useState(false);
 
   useEffect(() => {
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark');
@@ -17,7 +15,7 @@ const useDarkMode = () => {
     }
   }, [])
 
-  return [isDarkMode, setIsDarkMode];
+  return isDarkMode;
 }
 
 export default useDarkMode;

@@ -1,14 +1,14 @@
 import axios from 'axios';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import useDispatchEvent from '../hooks/useDispatchEvent';
 import { todoDescriptionState, todoTitleState } from '../state/todoAtoms';
+import { userState } from '../state/userAtoms';
 import { Alert } from '../types/components';
 import CustomInput from './CustomInput';
 import { AddButton, InputSec } from './TodoInputSection.style';
-import { userState } from '../state/userAtoms';
 
 const TodoInputSection: React.FC = () => {
-  const [user, SetUser] = useRecoilState(userState);
+  const user = useRecoilValue(userState);
   const [todoTitle, setTodoTitle] = useRecoilState(todoTitleState);
   const [todoDesc, setTodoDesc] = useRecoilState(todoDescriptionState);
   const refreshEvent = useDispatchEvent('refresh');
