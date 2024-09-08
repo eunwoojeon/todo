@@ -1,10 +1,11 @@
 import { Buffer } from 'buffer';
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import useInput from '../hooks/useInput';
 import { CustomInputProps } from '../types/components';
 import { TodoInput } from './CustomInput.style';
 
 const CustomInput: React.FC<CustomInputProps> = ({ text, recoilState }) => {
+  const inputRef = useRef<HTMLInputElement>(null);
   const maxByte = 60;
   const [byte, setByte] = useState(() => {
     if (text !== '제목' && text !== '할일') {
@@ -24,9 +25,11 @@ const CustomInput: React.FC<CustomInputProps> = ({ text, recoilState }) => {
 
   const value = useInput(recoilState, getByteLengthOfString);
 
+  const inputClickEvent = () => inputRef.current?.focus();
+
   return (
-    <TodoInput className='custom-input'>
-      <input type="text" {...value} placeholder={text} />
+    <TodoInput className='custom-input' onClick={inputClickEvent}>
+      <input ref={inputRef} type="text" {...value} placeholder={text} />
       <span>{byte}/{maxByte} byte</span>
     </TodoInput>
   )
